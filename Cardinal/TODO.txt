@@ -1,0 +1,38 @@
+﻿High Priority:
+ - [✓] Reset AWS VM (Fixed)
+ - [✓] Save Existing Database -> Port it into new VM
+
+Future Features
+ - [] Update VIP System
+ - [] ChatGPT API/Functionality
+ - [] Warn Command
+ - [] Malort Conversion
+ - [] Update Database Handler
+    - [] Add Discord Server info
+        - [] Logging Enable Disable   
+        - [] Logging Channel ID
+        - [] Service Enable/Disable (For Future Services)
+    - [] Port over to AWS Database
+ - [✓] Add Help Command
+ - [] Add Leaderboard command. (Exp, Economy)
+ - [] Activities
+    - [] Economy (some form of currency)
+    - [] Blackjack... (and hookers? jk)
+    - [] fishing / hunting / daily / etc
+    - [] Really just RPG items, I like epic Rpg bot maybe make something like that
+ - [] "Let's go Pokemon Go!"
+ - [] Make Party Invite Functionality.
+    - [] Make list to react to
+    - [] Send Dms
+    - [] Have Priority field
+    - [] Log where invites have been sent to.
+
+
+ - [] Twitch Integration
+ - [] fork of video2x and create a button to turn off my pc when the conversion is done
+    - [] https://github.com/k4yt3x/video2x
+
+Low Priority:
+ - [] Move VM to reset SSH pem Key. 
+ - [] Make actual Slash Command Handler
+    - [] Add all Commands to Slash Command

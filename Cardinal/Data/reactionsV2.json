@@ -1,0 +1,20 @@
+[
+  {
+    "AvatarId": "5f1dc97284781cdeefb7cb3d82b999d5",
+    "Discriminator": "2987",
+    "DiscriminatorValue": 2987,
+    "IsBot": true,
+    "IsWebhook": false,
+    "Username": "Kanako",
+    "PublicFlags": 0
+  },
+  {
+    "AvatarId": "882bf9a930999691baf9f4606d0bd3e8",
+    "Discriminator": "0001",
+    "DiscriminatorValue": 1,
+    "IsBot": false,
+    "IsWebhook": false,
+    "Username": "Syaoran",
+    "PublicFlags": 4194944
+  }
+]
