@@ -1,0 +1,13 @@
+[Unit]
+Description=Cardinal All-in-one Discord bot
+
+[Service]
+ExecStart=/usr/bin/node /opt/cardinal/index.js
+WorkingDirectory=/opt/cardinal
+Restart=always
+User=cardinal
+Group=cardinal
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

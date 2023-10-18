@@ -45,6 +45,10 @@ class LoggingService {
           return;
         }
 
+        if (oldMessage.content === newMessage.content) {
+          return;
+        }
+        
         this.util.dataHandler.getGuildConfig(
           oldMessage.guildId,
           (err, guildInfo) => {
