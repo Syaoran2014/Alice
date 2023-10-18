@@ -1,0 +1,43 @@
+pipeline {
+    agent { label 'Apathy-node'}
+
+    options {
+        buildDiscarder(
+            logRotator(
+                //number of build logs to keep
+                numToKeepStr:'15',
+            )
+        )
+    }
+
+    environment {
+        NODE_VERSION = 'NodeJS 18.17.0'
+    }
+
+    stages {
+        stage('Checkout'){
+            steps {
+                echo 'Checking out source code...'
+                script {
+                    checkout scm
+                }
+            }
+        }
+
+        stage('Build'){
+            steps{
+                sh ```
+                    echo "Using Node.js version ${NODE_VERSION}"
+                    nvm install ${NODE_VERSION}
+                    nvm use ${NODE_VERSION}
+                    npm install
+                ```
+            }
+        }
+/*
+Need to test this to see what shows up on the Minion. 
+Likely add a Move to a new directory
+Add a Updated/Execute Service
+*/
+    }
+}
