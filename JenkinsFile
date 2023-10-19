@@ -50,7 +50,6 @@ pipeline {
                 sh '''
                     source $HOME/.nvm/nvm.sh && nvm install 18.17.0
                     source $HOME/.nvm/nvm.sh && nvm use 18.17.0
-                    cp -r /home/devops/.nvm /home/cardinal/
                     sudo chown -R cardinal.cardinal /home/cardinal/.nvm
                     sudo mkdir -p /opt/cardinal
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
