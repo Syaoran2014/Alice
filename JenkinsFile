@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        NODE_VERSION = 'NodeJS 18.17.0'
+        NODEJS_HOME = tool name: 'NodeJS 18.17.0', type: 'Tool'
     }
 
     stages {
@@ -26,10 +26,9 @@ pipeline {
 
         stage('Build'){
             steps{
-                echo "Using Node.js version ${NODE_VERSION}"
+                echo "Using Node.js version ${NODEJS_HOME}"
+                echo "Installing Build Dependencies."
                 sh '''
-                    nvm install ${NODE_VERSION}
-                    nvm use ${NODE_VERSION}
                     npm install
                 '''
             }
