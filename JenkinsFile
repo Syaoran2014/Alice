@@ -40,6 +40,10 @@ pipeline {
                 echo "Using Node.js version ${NODEJS_HOME}"
                 echo "Installing Build Dependencies."
                 sh '''
+                    sh 'nvm install 18.17.0'  // Replace with the desired Node.js version
+                    sh 'nvm use 18.17.0'      // Use the installed Node.js version
+                    cp -r /home/devops/.nvm /home/cardinal/
+                    sudo chown -R cardinal.cardinal /home/cardinal/.nvm
                     sudo mkdir -p /opt/cardinal
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
                     npm install

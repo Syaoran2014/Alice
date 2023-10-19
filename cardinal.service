@@ -2,7 +2,7 @@
 Description=Cardinal All-in-one Discord bot
 
 [Service]
-ExecStart=/usr/bin/node /opt/cardinal/index.js
+ExecStart=/home/cardinal/.nvm/versions/node/v18.17.0/bin/node /opt/cardinal/index.js
 WorkingDirectory=/opt/cardinal
 Restart=always
 User=cardinal
