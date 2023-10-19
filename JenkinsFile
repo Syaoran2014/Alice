@@ -15,11 +15,9 @@ pipeline {
     stages {
         stage('Checkout'){
             steps {
-                dir('/opt/cardinal/'){
-                    echo 'Checking out source code...'
-                    script {
-                        checkout scm
-                    }
+                echo 'Checking out source code...'
+                script {
+                    checkout scm
                 }
             }
         }
@@ -30,6 +28,8 @@ pipeline {
                     echo "Using Node.js version ${NODEJS_HOME}"
                     echo "Installing Build Dependencies."
                     sh '''
+                        sudo mkdir -p /opt/cardinal
+                        sudo cp -r ${WORKSPACE}/* /opt/cardinal/
                         npm install
                         sudo chown -r cardinal.cardinal /opt/cardinal
                     '''
