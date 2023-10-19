@@ -13,6 +13,19 @@ pipeline {
     tools {nodejs "NodeJS 18.17.0"}
 
     stages {
+        stage('Shutdown Service if exists'){
+            steps {
+                script {
+                    def exists = fileExists '/lib/systemd/system/cardinal.service'
+                    if (exists) {
+                        sh "sudo systemctl stop cardinal.service"
+                    } else {
+                        println "service doesn't exist"
+                    }
+                }
+            }
+        }
+
         stage('Checkout'){
             steps {
                 echo 'Checking out source code...'
@@ -30,10 +43,22 @@ pipeline {
                     sudo mkdir -p /opt/cardinal
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
                     npm install
+                    sudo mkdir -p /opt/cardinal/data
                     sudo chown -R cardinal.cardinal /opt/cardinal
                 '''
             }
         }
+
+        stage('Update and start Service')
+            steps{
+                echo "Updating Linux Service"
+                sh '''
+                sudo cp /opt/cardinal/cardinal.service /lib/systemd/system/cardinal.service
+                sudo systemctl daemon-reload
+                sudo systemctl enable cardinal.service
+                sudo systemctl start cardinal.service
+                '''
+            }
 /*
 Need to test this to see what shows up on the Minion. 
 Likely add a Move to a new directory
