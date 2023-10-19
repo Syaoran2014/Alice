@@ -10,9 +10,7 @@ pipeline {
         )
     }
 
-    environment {
-        NODEJS_HOME = tool name: 'NodeJS 18.17.0', type: 'Tool'
-    }
+    tools {nodejs "NodeJS 18.17.0"}
 
     stages {
         stage('Checkout'){
