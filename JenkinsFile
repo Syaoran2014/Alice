@@ -24,16 +24,14 @@ pipeline {
 
         stage('Build'){
             steps{
-                dir('/opt/cardinal'){
-                    echo "Using Node.js version ${NODEJS_HOME}"
-                    echo "Installing Build Dependencies."
-                    sh '''
-                        sudo mkdir -p /opt/cardinal
-                        sudo cp -r ${WORKSPACE}/* /opt/cardinal/
-                        npm install
-                        sudo chown -r cardinal.cardinal /opt/cardinal
-                    '''
-                }
+                echo "Using Node.js version ${NODEJS_HOME}"
+                echo "Installing Build Dependencies."
+                sh '''
+                    sudo mkdir -p /opt/cardinal
+                    sudo cp -r ${WORKSPACE}/* /opt/cardinal/
+                    npm install
+                    sudo chown -r cardinal.cardinal /opt/cardinal
+                '''
             }
         }
 /*
