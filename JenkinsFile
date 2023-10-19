@@ -30,7 +30,7 @@ pipeline {
                     sudo mkdir -p /opt/cardinal
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
                     npm install
-                    sudo chown -r cardinal.cardinal /opt/cardinal
+                    sudo chown -R cardinal.cardinal /opt/cardinal
                 '''
             }
         }
