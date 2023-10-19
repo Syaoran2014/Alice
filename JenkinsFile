@@ -26,8 +26,8 @@ pipeline {
 
         stage('Build'){
             steps{
+                echo "Using Node.js version ${NODE_VERSION}"
                 sh ```
-                    echo "Using Node.js version ${NODE_VERSION}"
                     nvm install ${NODE_VERSION}
                     nvm use ${NODE_VERSION}
                     npm install
