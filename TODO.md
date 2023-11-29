@@ -1,62 +1,84 @@
 # TODO:
 
-High Priority:
+- [✓] Logging Enable Disable
+- [✓] Update CommandHandler - Put the Commands in subfolders for organization
+  - [✓] Update Help command to account for this.
+  - [✓] Make commands first letter capitalized  
+- [] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc) 
+  - [] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
+- [✓] Voice Chat integration
+  - [✓] Music Player
+  - [] BUG: Figure out Connection Reset Issue
+  - [] Make play searchable with terms if link not provided.
+    - [] Pulls list, assumes its the first one
+- [] Malort
+- [] Economy 
+  - [] New Table for RPG Items?
+  - [] Chat messages generate
+  - [] Hunt/Fish
+  - [] Gambling
+    - [] Blackjack
+    - [] CoinToss
+    - [] Slots
+    - [] ?
+- [] Update Profile command for Image manipulation, Create Better looking profiles
+- [] Determine in my current Database structure supports this.....
+  - [] Port over to AWS Database? 
+  - [] Port to Better Database Service?
+- [] Adventure RPG
+  - [] Create Character (Rpg start)
+    - [] Simple classes (tank, healer, fighter, mage) 
+    - [] Stats: Str, Def, Vit, Int... Wis?
+  - [] Adventure and Train Commands
+    - [] Add drops
+  - [] Equipment
+  - [] Other Items
+  - [] Dungeon 
+    - [] Eventually 100 floors (maybe more?)
+    - [] Party System
+  - [] NPC's
+  - [] In depth Stat system review
+    - [] Equipment / Class system rework
+    - [] Require Healing as Items
+  - [] Magic?
+  - [] ? 
+- [] Idle Game
+  - [] Sync with Advernture RPG
+  - [] Gacha with Waifus
+    - [] Percentage boost per waifu stat?
+    - [] Partying with Waifu in party system, improves waifu stats, percentage boost main char as support
+    - [] Gacha rolls drop something other than just characters
+    - [] How do you earn Gacha Rolls?
+  - [] AFK Earnings for Currency?
+  - [] Waifus have jobs? Can improve gear?
+    - [] Blacksmith, fisher, miner, chef, weaver.... others?
+    - [] Boosts crafted Items?
+  - [] ?
 
-- [✓] Reset AWS VM (Fixed)
-- [✓] Save Existing Database -> Port it into new VM
-- [✓] Remake in JS???
-- [✓] Migrate over to Apathys VM
-  - [✓] Setup CI/CD Pipeline
+- [] Port To WebServer
+  - [] Make Functional GUI for everything above
+  - [] Blog
+- [] Port To Mobile Apps
+  - [] Apple
+  - [] Andorid
 
-Mid Priority:
+How to Monitize: 
+- [] Subscription Service
+  - [] Double/Multiplied Xp Rate
+    - [] Applies to Waifus as well?
+  - [] Gacha Rolls?
+  - [] ?
 
-- [✓] Update Database Handler
-  - [] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc)
-  - [✓] Add Discord Server info
-    - [] Logging Enable Disable
-      - [✓] Framework Added, need Implementation
-    - [✓] Logging Channel ID
-    - [✓] Service Enable/Disable (For Future Services)
-- [✓] Add Help Command
-- [✓] Add Leaderboard command. (Exp, Economy)
-- [✓] Add Profile command
-  - [] Make fancy Profile command with Image manipulation
-  - [] Commission / Ask someone here to draw/edit better Images for Profiles.
+Other Items:
 - [] Update VIP System
   - [] Need new rules like how much exp per attendee
 - [] Warn Command
-
-Low Priority:
-
-- [✓] Move VM to reset SSH pem Key. (Unneeded when Migrate to new host.)
-- [✓] Make actual Slash Command Handler
-  - [✓] Add all Commands to Slash Command
-- [] Port over to AWS Database? 
-  - [] Need maintenece over current Database
-  - [] Simplify tables
-  
-
-Feature Ideas: (Will be moved into Priority once accepted.)
-
-- [] Malort Conversion
-- [] Activities
-  - [] Economy (some form of currency)
-    - [] Blackjack, CoinFlip, Gambling things.
-  - [] Really just RPG items, I like the epic Rpg bot maybe make something like that
-    - [] Daily/Fishing/Hunting/Adventure??? (this may turn into a whole service)
-    - [] 100 Floors Adventure? (SAO References Obviously)
-      - [] Basic RPG Items
-      - [] Video Game referrences (Kingdom Hearts, Final Fantasy Stuff, etc) 
-- [] "Let's go Pokemon Go!"
 - [] Make Party Invite Functionality.
   - [] Make list to react to
   - [] Send Dms
   - [] Have Priority field
   - [] Log where invites have been sent to.
 - [] Make My own Stat Algorithm that matches Discord closer
-- [] Discord Voice Items
-  - [] Add Music Functionality
-  - [] Voice Commands? (Might sync with conversationl AI stuff)
 - [] Add Honkai/Genshin Support (Check-in?, Profile cards, etc)
 - [] Conversational AI
   - [] ChatGPT API/Functionality?
@@ -66,11 +88,26 @@ Feature Ideas: (Will be moved into Priority once accepted.)
   - [] Chatbot
   - [] Commands
   - [] XP per chat Activity
-- [] Make Minecraft MMO GET Service (For User Levels and other such)
 - [] fork of video2x and create a button to turn off my pc when the conversion is done
   - [] https://github.com/k4yt3x/video2x
-- [] WebServer Casino??
 
-Non-Bot Related Items:
+Completed:
+- [✓] Reset AWS VM (Fixed)
+- [✓] Save Existing Database -> Port it into new VM
+- [✓] Remake in JS???
+- [✓] Migrate over to Apathys VM
+  - [✓] Setup CI/CD Pipeline
+- [✓] Add Help Command
+- [✓] Add Leaderboard command. (Exp, Economy)
+- [✓] Move VM to reset SSH pem Key. (Unneeded when Migrate to new host.)
+- [✓] Make actual Slash Command Handler
+  - [✓] Add all Commands to Slash Command
+- [✓] Update Database Handler
+  - [✓] Add Discord Server info
+      - [✓] Framework Added, need Implementation
+    - [✓] Logging Channel ID
+    - [✓] Service Enable/Disable (For Future Services)
+- [✓] Add Profile command
 
-- [✓] Setup Minecraft Server
+
+
