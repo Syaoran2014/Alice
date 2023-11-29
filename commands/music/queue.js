@@ -6,8 +6,6 @@ module.exports = {
       .setName("queue")
       .setDescription("Shows current song queue."),
     execute: async function(interaction, util) {
-        const plyaer = useMainPlayer()
-
         const queue = useQueue(interaction.guild);
         if(!queue) {
             return interaction.reply({ content: "No music is currently in queue.", ephemeral: true});
@@ -34,6 +32,6 @@ module.exports = {
             timestamp: new Date().toISOString(),
         }
 
-        interaction.reply({ embeds: [emebed]})
+        interaction.reply({ embeds: [emebed]});
     }
 }

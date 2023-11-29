@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, InteractionResponse } = require("discord.js");
 const { useMainPlayer, QueryType } = require('discord-player');
 
 module.exports = {
@@ -28,7 +28,9 @@ module.exports = {
             title: "No results found... please try again!"
         }
 
-        if(!res || !res.tracks.length) return interaction.followUp({ embeds: [noResultsEmbed]});
+        if(!res || !res.tracks.length) {
+            return interaction.followUp({ embeds: [noResultsEmbed]});
+        }
         
         const queue = await player.nodes.create(interaction.guild, {
             metadata: interaction.channel,
@@ -36,7 +38,7 @@ module.exports = {
             leaveOnEmptyCooldown: 30000,
             leaveOnEnd: true,
             leaveOnEndCooldown: 30000,
-            volume: 50,
+            volume: 5, //Update to 50... Maybe leave at 5?? It sounds fine....
         });
 
         if(!channel) {
@@ -57,7 +59,7 @@ module.exports = {
 
         const playEmbed = {
             title: `Loading your ${res.playlist? 'playlist' : 'track'} to the queue... ✅`,
-            //description: `${res.tracks}`,
+            description: `${res.tracks[0]}`,
             color: parseInt("2f3136", 16),
         }
 
@@ -65,7 +67,7 @@ module.exports = {
         await interaction.followUp({ embeds: [playEmbed]})
 
         res.playlist ? queue.addTrack(res.tracks): queue.addTrack(res.tracks[0]);
-
+        //Update to catch and emit the playerStart 
         if(!queue.isPlaying()) await queue.node.play();
 
         // try {

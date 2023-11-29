@@ -37,7 +37,7 @@ module.exports = {
             }
             if (!guildInfo) {
                 return interaction.reply({
-                    content: "No Server Info Found, Please try again later.",
+                    content: "No Server Info Found, Please try again later."
                 });
             } else {
                 const logStatus = guildInfo.LogEnabled;
@@ -55,7 +55,7 @@ module.exports = {
                             }
                         } else {
                             util.dataHandler.getDatabase().run("UPDATE ServerConfig SET LogEnabled = ?, LogChannel = ? WHERE GuildId = ?",
-                            [1, logChannel.id, cServer])
+                            [1, logChannel, cServer])
                             return interaction.reply({content: `Logging has been enabled for ${interaction.guild} in channel <#${logChannel}>`})
                         }
                     case "disable":

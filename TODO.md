@@ -8,12 +8,20 @@
   - [] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
 - [✓] Voice Chat integration
   - [✓] Music Player
-  - [] BUG: Figure out Connection Reset Issue
+  - [✓] BUG: Figure out Connection Reset Issue
   - [] Make play searchable with terms if link not provided.
     - [] Pulls list, assumes its the first one
+  - [✓] Make Skip restrict to Dj role, admin, or Channel Majority
+    - [✓] Add djRole column in ServerConfig 
+  - [✓] Add shuffle, playNext, nowPlaying
+    - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
 - [] Malort
 - [] Economy 
   - [] New Table for RPG Items?
+    - [] tableName UserEconomy
+    - [] UserID, Currency, inventory
+      - [] Inventory needs blob - houses json
+       - [] ie { "fish": 1, "meat": 1}
   - [] Chat messages generate
   - [] Hunt/Fish
   - [] Gambling

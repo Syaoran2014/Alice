@@ -61,7 +61,7 @@ class DataHandler {
     this.db = new sqlite.Database(__dirname + "/../data/Cardinal.db");
     this.db
       .run(
-        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL);"
+        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18),  DjRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL);"
       )
       .on("error", (err) => {
         util.logger.error(
@@ -79,6 +79,43 @@ class DataHandler {
             err.message
         );
       });
+
+      this.checkAndUpdateSchema();
+  }
+
+  checkAndUpdateSchema() {
+    const desiredSchema = [
+      "GuildId VARCHAR(18) NOT NULL", 
+      "LogEnabled BOOLEAN",
+      "LogChannel VARCHAR(18)",
+      "MutedRole VARCHAR(18)",
+      "DjRole VARCHAR(18)",
+      "DisabledCmds MEDIUMBLOB NOT NULL",
+    ];
+    this.db.all("PRAGMA table_info(ServerConfig);", (err, rows) => {
+      if (err) {
+        this.util.logger.error(
+          "Error occurred while checking table schema: " + err.message
+        );
+        return;
+      }
+
+      const existingColumns = rows.map((row) => row.name);
+      const missingColumns = desiredSchema
+        .filter((column) => !existingColumns.includes(column.split(" ")[0]));
+
+      if (missingColumns.length > 0) {
+        const updateSQL = `ALTER TABLE ServerConfig ADD COLUMN ${missingColumns.join(", ")};`;
+
+        this.db.run(updateSQL, (updateErr) => {
+          if (updateErr) {
+            this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
+          } else {
+            this.util.logger.log("Updated table schema.");
+          }
+        });
+      }
+    });
   }
 
   getGuildConfig(guild_id, callback) {
@@ -96,6 +133,7 @@ class DataHandler {
             LogEnabled: row.LogEnabled,
             LogChannel: row.LogChannel,
             MutedRole: row.MutedRole,
+            DjRole: row.DjRole,
             DisabledCmds: JSON.parse(row.DisabledCmds),
           };
         });

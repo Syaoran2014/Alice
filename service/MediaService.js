@@ -17,6 +17,7 @@ class MediaService {
             this.util.logger.log('Failed to initialize MediaService:', error);
         }
 
+        //Update 
         // this.player.events.on('playerStart', (queue, track) => {
         //     queue.metadata.channel.send(`Started playing ***${track.title}***`);
         // });

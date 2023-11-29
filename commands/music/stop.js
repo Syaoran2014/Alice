@@ -6,16 +6,16 @@ module.exports = {
       .setName("stop")
       .setDescription("Stops the track"),
     execute: async function(interaction, util) {
-        const player = useMainPlayer()
-
         const queue = useQueue(interaction.guild);
 
-        if(!queue || !queue.isPlaying()) return interaction.reply({content: `No music is currently playing`, ephemeral: true });
+        if(!queue || !queue.isPlaying()) {
+            return interaction.reply({content: `No music is currently playing`, ephemeral: true });
+        }
 
         queue.delete();
 
         const stopEmbed = {
-            title: "Mudic stopped, see you next time! (*^ ‿ <*)♡",
+            title: "Music stopped, see you next time! (*^ ‿ <*)♡",
             color: parseInt("f0ccc0", 16),
         }
 
