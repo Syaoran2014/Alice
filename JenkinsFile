@@ -57,7 +57,7 @@ pipeline {
                     sudo chown -R cardinal.cardinal /opt/cardinal
                     npm --version
                     npm cache clean --force
-                    rm -rf /opt/cardinal/node_modules
+                    sudo rm -rf /opt/cardinal/node_modules
                     npm install
                     sudo mkdir -p /opt/cardinal/data
                     sudo chown -R cardinal.cardinal /opt/cardinal
