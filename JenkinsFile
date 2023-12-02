@@ -54,7 +54,6 @@ pipeline {
                     sudo chown -R cardinal.cardinal /home/cardinal/.nvm
                     sudo mkdir -p /opt/cardinal
                     sudo rsync -av --delete --exclude='data/Cardinal.db' ${WORKSPACE}/* /opt/cardinal/
-                    sudo chown -R cardinal.cardinal /opt/cardinal
                     cd /opt/cardinal
                     npm --version
                     npm cache clean --force
