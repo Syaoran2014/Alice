@@ -104,7 +104,7 @@ module.exports = {
             const query = song; 
             const res = await player.search(query, {
                 requestedBy: interaction.member,
-                searchEngine: platform ? QueryType.platform : QueryType.YOUTUBE
+                searchEngine: platform ? QueryType.platform : QueryType.SPOTIFY_SEARCH
             });
 
             if(!res || !res.tracks.length) {
