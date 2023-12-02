@@ -48,6 +48,7 @@ pipeline {
                 echo "Using Node.js version ${NODEJS_HOME}"
                 echo "Installing Build Dependencies."
                 sh '''
+                    
                     source $HOME/.nvm/nvm.sh && nvm install 18.17.0
                     source $HOME/.nvm/nvm.sh && nvm use 18.17.0
                     sudo chown -R cardinal.cardinal /home/cardinal/.nvm
@@ -55,6 +56,7 @@ pipeline {
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
                     sudo mkdir -p /opt/cardinal/data
                     sudo chown -R cardinal.cardinal /opt/cardinal
+                    cd /opt/cardinal
                     npm --version
                     npm cache clean --force
                     sudo rm -rf /opt/cardinal/node_modules
