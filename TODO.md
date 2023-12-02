@@ -9,8 +9,8 @@
 - [✓] Voice Chat integration
   - [✓] Music Player
   - [✓] BUG: Figure out Connection Reset Issue
-  - [] Make play searchable with terms if link not provided.
-    - [] Pulls list, assumes its the first one
+  - [✓] Make play searchable with terms if link not provided.
+    - [✓] Pulls list, assumes its the first one
   - [✓] Make Skip restrict to Dj role, admin, or Channel Majority
     - [✓] Add djRole column in ServerConfig 
   - [✓] Add shuffle, playNext, nowPlaying
