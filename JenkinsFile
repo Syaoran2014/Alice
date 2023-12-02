@@ -53,6 +53,8 @@ pipeline {
                     sudo chown -R cardinal.cardinal /home/cardinal/.nvm
                     sudo mkdir -p /opt/cardinal
                     sudo cp -r ${WORKSPACE}/* /opt/cardinal/
+                    npm --version
+                    npm cache clean --force
                     npm install
                     sudo mkdir -p /opt/cardinal/data
                     sudo chown -R cardinal.cardinal /opt/cardinal
