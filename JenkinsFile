@@ -35,13 +35,13 @@ pipeline {
             }
         }
 
-        stage('Install NVM') {
-            steps {
-                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
-                sh 'export NVM_DIR="$HOME/.nvm"'
-                sh '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm'
-            }
-        }
+        // stage('Install NVM') {
+        //     steps {
+        //         sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
+        //         sh 'export NVM_DIR="$HOME/.nvm"'
+        //         sh '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm'
+        //     }
+        // }
 
         stage('Build'){
             steps{
