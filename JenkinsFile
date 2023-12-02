@@ -53,8 +53,7 @@ pipeline {
                     source $HOME/.nvm/nvm.sh && nvm use 18.17.0
                     sudo chown -R cardinal.cardinal /home/cardinal/.nvm
                     sudo mkdir -p /opt/cardinal
-                    sudo cp -r ${WORKSPACE}/* /opt/cardinal/
-                    sudo mkdir -p /opt/cardinal/data
+                    sudo rsync -av --delete --exclude='data/Cardinal.db' ${WORKSPACE}/* /opt/cardinal/
                     sudo chown -R cardinal.cardinal /opt/cardinal
                     cd /opt/cardinal
                     npm --version
