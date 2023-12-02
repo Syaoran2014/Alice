@@ -28,11 +28,12 @@ module.exports = {
                 const currentLevel = userInfo.ChatLvl;
                 const xp = parseInt(userInfo.ChatExp);
                 const nextLvlExp = userInfo.LevelXp;
+                const currency = userInfo.Currency;
 
                 const embed = {
                     color: parseInt("f0ccc0", 16),
                     title: `${pUser} user profile`,
-                    description: `Level ${currentLevel}: ${xp}/${nextLvlExp}`,
+                    description: `Level ${currentLevel}: ${xp}/${nextLvlExp}\nCurrency: ${currency}`,
                 };
 
                 return interaction.reply({

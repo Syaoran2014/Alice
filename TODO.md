@@ -14,9 +14,10 @@
   - [✓] Make Skip restrict to Dj role, admin, or Channel Majority
     - [✓] Add djRole column in ServerConfig 
   - [✓] Add shuffle, playNext, nowPlaying
-    - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
+  - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
+  - [] Update queue to cycle and show more. 
 - [] Malort
-- [] Economy 
+- [] Economy / Alcoins? Malorkles?
   - [] New Table for RPG Items?
     - [] tableName UserEconomy
     - [] UserID, Currency, inventory
@@ -70,7 +71,7 @@
   - [] Apple
   - [] Andorid
 
-How to Monitize: 
+How to Monetize: 
 - [] Subscription Service
   - [] Double/Multiplied Xp Rate
     - [] Applies to Waifus as well?

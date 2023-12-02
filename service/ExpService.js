@@ -46,12 +46,16 @@ class ExpService {
             ChatExp: 10,
             Birthday: null,
             LastXpGain: null,
+            Currency: 0,
+            Inventory: {},
+            DailyStreak: null,
+            LastDailyClaim: null
           };
 
           this.util.dataHandler
             .getDatabase()
             .run(
-              "INSERT INTO DiscordUserData (UserId, UserName, GuildId, VIP_Tier, VIPLevel, VIP_Exp, LevelXp, Xp, ChatLvl, TotalXp, ChatExp, Birthday, LastXpGain) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+              "INSERT INTO DiscordUserData (UserId, UserName, GuildId, VIP_Tier, VIPLevel, VIP_Exp, LevelXp, Xp, ChatLvl, TotalXp, ChatExp, Birthday, LastXpGain, Currency, Inventory, DailyStreak, LastDailyClaim) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
               Object.values(initialUserData),
               (err) => {
                 if (err) {
@@ -117,7 +121,8 @@ class ExpService {
       });
     });
   }
-}
+};
+
 module.exports = ExpService;
 
 function weightedRandomNumber() {
