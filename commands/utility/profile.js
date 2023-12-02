@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,7 +11,7 @@ module.exports = {
               .setRequired(false)),
     execute: async function (interaction, util) {
         const userOption = interaction.options.getUser('target');
-        const user = userOption ? userOption.id : interaction.user.id
+        const user = userOption ? userOption.id : interaction.user.id;
         util.dataHandler.getUserInfo(user, (err, userInfo) => {
             if (err){
                 util.logger.error(err.message);
@@ -39,7 +39,7 @@ module.exports = {
                     embeds: [embed],
                 });
             }
-        })
+        });
     },
     callback: async function (msg, args, util) {
         

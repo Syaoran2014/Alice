@@ -33,7 +33,7 @@ module.exports = {
         util.dataHandler.getGuildConfig(cServer, (err, guildInfo) => {
             if (err){
                 util.logger.error(err.message);
-                return interaction.reply({content: "Something didn't process right, Try again later."})
+                return interaction.reply({content: "Something didn't process right, Try again later."});
             }
             if (!guildInfo) {
                 return interaction.reply({
@@ -47,35 +47,35 @@ module.exports = {
                     case "enable":
                         if (!logChannel){
                             if (!currentLogChannel){
-                                return interaction.reply({content: "No Log Channel set, Please enter a channel to log too"})
+                                return interaction.reply({content: "No Log Channel set, Please enter a channel to log too"});
                             } else {
                                 util.dataHandler.getDatabase().run("UPDATE ServerConfig SET LogEnabled = ? WHERE GuildId = ?", 
-                                [1, cServer])
-                                return interaction.reply({content: `Logging has been enabled for ${interaction.guild} in channel <#${currentLogChannel}>`})    
+                                [1, cServer]);
+                                return interaction.reply({content: `Logging has been enabled for ${interaction.guild} in channel <#${currentLogChannel}>`});   
                             }
                         } else {
                             util.dataHandler.getDatabase().run("UPDATE ServerConfig SET LogEnabled = ?, LogChannel = ? WHERE GuildId = ?",
-                            [1, logChannel, cServer])
-                            return interaction.reply({content: `Logging has been enabled for ${interaction.guild} in channel <#${logChannel}>`})
+                            [1, logChannel, cServer]);
+                            return interaction.reply({content: `Logging has been enabled for ${interaction.guild} in channel <#${logChannel}>`});
                         }
                     case "disable":
                         if(!logStatus) {
                             return interaction.reply({content: "Server Logging has been disabled"});
                         } 
                         util.dataHandler.getDatabase().run("UPDATE ServerConfig SET LogEnabled = ? WHERE GuildId = ?", 
-                        [0, cServer])
+                        [0, cServer]);
                         return interaction.reply({content: "Server Logging has been disabled"});
                     case "set":
                         if(!logChannel) {
-                            return interaction.reply({content: "You must specify a channel for logging!"})
+                            return interaction.reply({content: "You must specify a channel for logging!"});
                         }
                         util.dataHandler.getDatabase().run("UPDATE ServerConfig SET LogChannel = ? WHERE GuildId = ?", 
-                        [logChannel, cServer])
+                        [logChannel, cServer]);
                         return interaction.reply({content: `Logging channel has been set to <#${logChannel}>`});
                     default:
                         return interaction.reply({content: "No option was set, please enter an option and try again"});
                 }
             }
-        })
+        });
     }
-}
+};

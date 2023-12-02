@@ -9,7 +9,6 @@
   },
   "rules": {
     "semi": ["error", "always"],
-    "no-unused-vars": ["error", { "args": "none" }],
-    "avoidEscape": true
+    "no-unused-vars": ["error", { "args": "none" }]
   }
 }

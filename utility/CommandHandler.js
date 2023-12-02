@@ -130,6 +130,18 @@ class CommandHandler {
     command.callback(message, args, this.util);
     // message.channel.stopTyping();
   }
+
+  deleteAllCommands() {
+      try {
+        const rest = new this.util.lib.REST().setToken(this.util.config.token);
+        this.util.logger.log(`Deleting all application commands. `);
+        
+        rest.put(this.util.lib.Routes.applicationGuildCommands(this.util.config.clientId, this.util.config.guildId), { body: [] })
+          .then(() => this.util.logger.log(`Successfully deleted all application commands`));
+      } catch (error){
+        this.util.logger.error(error);
+      }
+  }
 }
 
 module.exports = CommandHandler;

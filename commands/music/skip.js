@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { useMainPlayer, useQueue } = require("discord-player");
+const { useQueue } = require("discord-player");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
     util.dataHandler.getGuildConfig(interaction.guildId, (err, guildInfo) => {
         if (err){
             util.logger.error(err.message);
-            return interaction.reply({ content: "Sorry! Something didn't process right, try again later.\nIf issue persists, Contact Bot Owner."})
+            return interaction.reply({ content: "Sorry! Something didn't process right, try again later.\nIf issue persists, Contact Bot Owner."});
         }
         if(!guildInfo){
             return interaction.reply({ content: "No Server Info found, Please try again later."});
@@ -32,11 +32,11 @@ module.exports = {
                 const skippedEmbed = {
                     title: success ? `Current track ${queue.currentTrack.title} has been skipped` : `Something went wrong, please try again`,
                     color: parseInt("f0ccc0", 16),
-                }
+                };
                 return interaction.reply({ embeds: [skippedEmbed]});
             } else {
                 if (!channel){
-                    return interaction.reply({ content: "You are not connected to a voice channel!", ephemeral: true})
+                    return interaction.reply({ content: "You are not connected to a voice channel!", ephemeral: true});
                 }
 
                 const voiceMembers = channel.members.filter((member) => !member.user.bot);
@@ -60,7 +60,7 @@ module.exports = {
                     const skippedEmbed = {
                         title: success ? `Current track ${queue.currentTrack.title} has been skipped` : `Something went wrong, please try again`,
                         color: parseInt("f0ccc0", 16),
-                    }
+                    };
                     return interaction.reply({ embeds: [skippedEmbed]});
                 } else {
                     return interaction.reply({
@@ -70,7 +70,7 @@ module.exports = {
                 }
             }
         }
-    })
+    });
   },
 
   callback: async function (msg, args, util) {},

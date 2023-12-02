@@ -21,7 +21,7 @@ module.exports = {
             })),
         };
         interaction.reply({ embeds: [embed] });
-    })
+    });
   },
   async callback(msg, args, util) {
     msg.channel.send(

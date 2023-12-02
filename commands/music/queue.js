@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { useMainPlayer, useQueue } = require("discord-player");
+const { useQueue } = require("discord-player");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,8 +30,8 @@ module.exports = {
             },
             description: `Current ${queue.currentTrack.title}\n\n${tracks.slice(0, 5).join('\n')}\n\n${nextSonges}`,
             timestamp: new Date().toISOString(),
-        }
+        };
 
         interaction.reply({ embeds: [emebed]});
     }
-}
+};

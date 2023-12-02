@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { useMainPlayer, useQueue } = require("discord-player");
+const { useQueue } = require("discord-player");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,7 +7,7 @@ module.exports = {
       .setDescription("Stops the track"),
     execute: async function(interaction, util) {
         const queue = useQueue(interaction.guild);
-        const channel = interaction.member.voice.channel;
+        //const channel = interaction.member.voice.channel;
         const member = interaction.member; 
 
         if(!queue || !queue.isPlaying()) {
@@ -17,7 +17,7 @@ module.exports = {
         util.dataHandler.getGuildConfig(interaction.guildId, (err, guildInfo) => {
             if (err){
                 util.logger.error(err.message);
-                return interaction.reply({ content: "Sorry! Something didn't process right, try again later.\nIf issue persists, Contact Bot Owner."})
+                return interaction.reply({ content: "Sorry! Something didn't process right, try again later.\nIf issue persists, Contact Bot Owner."});
             }
             if(!guildInfo){
                 return interaction.reply({ content: "No Server Info found, Please try again later."});
@@ -33,12 +33,12 @@ module.exports = {
                     const stopEmbed = {
                         title: "Music stopped, see you next time! \n(*^ ‿ <*)♡",
                         color: parseInt("f0ccc0", 16),
-                    }
+                    };
                     
 
                     return interaction.reply({ embeds: [stopEmbed]});
                 }
             }
-        })
+        });
     },
-}
+};

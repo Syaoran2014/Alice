@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { useMainPlayer, useQueue } = require("discord-player");
+const { useQueue } = require("discord-player");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,8 +26,8 @@ module.exports = {
                 icon_url: util.bot.user.displayAvatarURL({ size: 1024, dynamic: true}),
             },
             description: `${track.title}\n ${progress}\n Requested by: ${track.requestedBy}`
-        }
+        };
 
         interaction.reply({ embeds: [embed]});
     }
-}
+};
