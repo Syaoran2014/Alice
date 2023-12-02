@@ -60,6 +60,7 @@ pipeline {
                     sudo rm -rf /opt/cardinal/node_modules
                     npm install
                     sudo chown -R cardinal.cardinal /opt/cardinal
+                    sudo chmod -R 775 /opt/cardinal
                 '''
             }
         }
