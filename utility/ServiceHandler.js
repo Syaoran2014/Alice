@@ -9,6 +9,9 @@ class ServiceHandler {
       let service_name = service.split(".js")[0];
       let Service = require(__dirname + "/../service/" + service);
       this.services[service_name] = new Service(this.util);
+      if (typeof this.services[service_name].initialize === 'function') {
+        this.services[service_name].initialize();
+      }
       this.util.logger.log("   - " + service_name + " initialized.");
     });
   }

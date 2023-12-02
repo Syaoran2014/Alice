@@ -10,14 +10,17 @@ class CommandHandler {
   registerCommands() {
     this.util.logger.log("Registering Commands.");
     this.util.bot.commands = new this.util.lib.Collection();
-    const commandPath = this.util.path.join(__dirname, "../commands");
-    this.util.fs
-      .readdirSync(commandPath)
-      .filter((file) => file.endsWith(".js"))
-      .forEach((file) => {
+    const folderPath = this.util.path.join(__dirname, "../commands");
+    const commandFolders = this.util.fs.readdirSync(folderPath);
+
+    for (const folder of commandFolders){
+      const commandsPath = this.util.path.join(folderPath, folder);
+      const commandFiles = this.util.fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
+      for(const file of commandFiles){
+        const filePath = this.util.path.join(commandsPath, file);
+        const command = require(filePath);
         const commandName = file.split(".js")[0];
-        const command = require(commandPath + "/" + file);
-        if ("data" in command && "execute" in command) {
+        if("data" in command && "execute" in command) {
           this.util.logger.log(`   - ${commandName} registered as command!`);
           this.util.bot.commands.set(command.data.name, command);
 
@@ -30,7 +33,8 @@ class CommandHandler {
             `[WARNING] The command at ${commandName} is missing a required "data" or "execute" property.`
           );
         }
-      });
+      }
+    }
     const rest = new this.util.lib.REST().setToken(this.util.config.token);
 
     (async () => {

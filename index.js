@@ -32,6 +32,7 @@ util.bot = new Discord.Client({
     Discord.GatewayIntentBits.GuildMessageTyping,
     Discord.GatewayIntentBits.GuildMessageReactions,
     Discord.GatewayIntentBits.MessageContent,
+    Discord.GatewayIntentBits.GuildVoiceStates
   ],
 });
 util.commandHandler = new CommandHandler(util);

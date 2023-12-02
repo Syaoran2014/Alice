@@ -7,8 +7,10 @@ module.exports = {
   execute: async function (interaction, util) {
     const helpCommand = [];
     util.commandHandler.sCommands.forEach((command) => {
+      let commandName = command.name.toString();
+      let capCommandName = commandName.charAt(0).toUpperCase() + commandName.slice(1);
       let commandJson = {
-        name: command.name.toString(),
+        name: capCommandName,
         value: command.description.toString(),
       };
       helpCommand.push(commandJson);
@@ -26,8 +28,10 @@ module.exports = {
   callback: async function (msg, args, util) {
     const helpCommand = [];
     util.commandHandler.sCommands.forEach((command) => {
+      let commandName = command.name.toString();
+      let capCommandName = commandName.charAt(0).toUpperCase() + commandName.slice(1);
       let commandJson = {
-        name: command.name.toString(),
+        name: capCommandName,
         value: command.description.toString(),
       };
       helpCommand.push(commandJson);
