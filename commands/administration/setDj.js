@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
+  category: 'administration',
   data: new SlashCommandBuilder()
     .setName("setdj")
     .setDescription("Command used to set a DJ role.")

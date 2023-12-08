@@ -51,6 +51,6 @@ class EconomyService {
             });
         });
     }
-};
+}
 
 module.exports = EconomyService;

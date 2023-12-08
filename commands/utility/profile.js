@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+    category: 'utility',
     data: new SlashCommandBuilder()
         .setName("profile")
         .setDescription("Shows User Profile and information")

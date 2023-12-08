@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 const { useQueue } = require("discord-player");
 
 module.exports = {
+    category: 'music',
     data: new SlashCommandBuilder()
       .setName("queue")
       .setDescription("Shows current song queue."),

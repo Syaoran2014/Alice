@@ -47,7 +47,7 @@ class ExpService {
             Birthday: null,
             LastXpGain: null,
             Currency: 0,
-            Inventory: {},
+            Inventory: JSON.stringify(`{}`),
             DailyStreak: null,
             LastDailyClaim: null
           };
@@ -121,7 +121,7 @@ class ExpService {
       });
     });
   }
-};
+}
 
 module.exports = ExpService;
 

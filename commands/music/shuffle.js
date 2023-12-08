@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 const { useQueue } = require("discord-player");
 
 module.exports = {
+  category: 'music',
   data: new SlashCommandBuilder()
     .setName("shuffle")
     .setDescription("Command used to shuffle the music queue."),

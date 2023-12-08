@@ -3,6 +3,7 @@ const { useMainPlayer, useQueue, QueryType } = require("discord-player");
 const { userSearchStatus } = require(`./play`);
 
 module.exports = {
+    category: 'music',
   data: new SlashCommandBuilder()
     .setName("playnext")
     .setDescription("Forces song to play next in queue")

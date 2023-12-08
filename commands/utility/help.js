@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Responds with list of available commands."),

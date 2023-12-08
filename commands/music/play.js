@@ -4,6 +4,7 @@ const { useMainPlayer, QueryType } = require('discord-player');
 const userSearchStatus = new Map();
 
 module.exports = {
+    category: 'music',
     userSearchStatus,
     data: new SlashCommandBuilder()
       .setName("play")

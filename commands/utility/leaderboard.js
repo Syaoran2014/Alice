@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Leaderboard of top user's based on chat activity."),

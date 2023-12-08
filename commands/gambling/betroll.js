@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
+    category: 'gambling',
+    data: new SlashCommandBuilder()
     .setName("betroll")
     .setDescription("Roll a 66 or Higher to be a winner!")
     .addNumberOption((option) => 
@@ -30,7 +31,7 @@ module.exports = {
             const result = Math.floor(Math.random() * 100) + 1;
             if (result === 100) {
                 const winningAmount = betAmount * 10;
-                const paidAmount = winningAmount + userCurrency
+                const paidAmount = winningAmount + userCurrency;
                 util.dataHandler.getDatabase().run("UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?",
                 [paidAmount, userId],
                 (err) => {
@@ -42,7 +43,7 @@ module.exports = {
                 });
             } else if (result >= 90 && result < 100 ){
                 const winningAmount = betAmount * 4;
-                const paidAmount = winningAmount + userCurrency
+                const paidAmount = winningAmount + userCurrency;
                 util.dataHandler.getDatabase().run("UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?",
                 [paidAmount, userId],
                 (err) => {
@@ -54,7 +55,7 @@ module.exports = {
                 });
             } else if (result >= 66 && result < 90 ){
                 const winningAmount = betAmount * 2;
-                const paidAmount = winningAmount + userCurrency
+                const paidAmount = winningAmount + userCurrency;
                 util.dataHandler.getDatabase().run("UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?",
                 [paidAmount, userId],
                 (err) => {

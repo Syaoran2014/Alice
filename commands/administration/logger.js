@@ -1,6 +1,7 @@
 const {SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
+    category: 'administration',
     data: new SlashCommandBuilder()
         .setName("logger")
         .setDescription("Manage the logging servicer per server.")

@@ -107,15 +107,15 @@ class DataHandler {
 
       if (missingColumns.length > 0) {
         missingColumns.forEach((column) => {
-          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`
+          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`;
           this.db.run(updateSQL, (updateErr) => {
             if (updateErr) {
               this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
             } else {
               this.util.logger.log("Updated table schema.");
             }
-          })
-        })
+          });
+        });
       }
     });
   }
@@ -150,15 +150,15 @@ class DataHandler {
       if (missingColumns.length > 0) {
         
         missingColumns.forEach((column) => {
-          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`
+          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`;
           this.db.run(updateSQL, (updateErr) => {
             if (updateErr) {
               this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
             } else {
               this.util.logger.log("Updated table schema.");
             }
-          })
-        })
+          });
+        });
         //const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${missingColumns.join(", ")};`;
         // this.db.run(updateSQL, (updateErr) => {
         //   if (updateErr) {

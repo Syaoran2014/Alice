@@ -17,7 +17,7 @@
   - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
   - [] Update queue to cycle and show more. 
 - [] Malort
-- [] Economy / Alcoins? Malorkles?
+- [✓] Economy / Alcoins? Malorkles?
   - [] New Table for RPG Items?
     - [] tableName UserEconomy
     - [] UserID, Currency, inventory
@@ -27,7 +27,8 @@
   - [] Hunt/Fish
   - [] Gambling
     - [] Blackjack
-    - [] CoinToss
+    - [✓] CoinToss
+    - [✓] D100 BetRoll 
     - [] Slots
     - [] ?
 - [] Update Profile command for Image manipulation, Create Better looking profiles

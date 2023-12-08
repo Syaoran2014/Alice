@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+    category: 'gambling',
   data: new SlashCommandBuilder()
     .setName("cointoss")
     .setDescription("50/50 Shot to double your bet!")
