@@ -65,9 +65,7 @@ module.exports = {
             const collector = interaction.channel.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000});
             
             collector.on('collect', async i => {
-
                 const gameState = userGames.get(interaction.user.id);
-                util.logger.log(i.customId);
                 const [action, gameId] = i.customId.split('-');
                 if(!gameState) {
                     return i.reply({ content: "No active game found.", ephemeral: true});
