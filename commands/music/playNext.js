@@ -163,16 +163,17 @@ module.exports = {
                 const userChoice = Number(collected.first().content);
                 const selectedTrack = firstFiveTracks[userChoice - 1];
 
-                queue.insertTrack(res.tracks[0], 0);
-                userSearchStatus.delete(interaction.user.id);
-
-                const selectedEmbed = {
-                    title: `Track was successfully added to the front of the queue... ✅`,
-                    description: `${selectedTrack.title} by ${selectedTrack.author}`,
-                    color: parseInt("f0ccc0", 16),
-                };
-                interaction.editReply({ embeds: [selectedEmbed]});
-
+                if (userChoice != 'x') {
+                    queue.insertTrack(res.tracks[userChoice], 0);
+                    userSearchStatus.delete(interaction.user.id);
+                
+                    const selectedEmbed = {
+                        title: `Track was successfully added to the front of the queue... ✅`,
+                        description: `${selectedTrack.title} by ${selectedTrack.author}`,
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    interaction.editReply({ embeds: [selectedEmbed]});
+                }   
                 //Update to catch and emit the playerStart 
             }).catch((err) => {
                 const cancelledSearch = {
