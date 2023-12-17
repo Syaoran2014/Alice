@@ -49,7 +49,7 @@ module.exports = {
                 new ButtonBuilder().setCustomId('previous').setEmoji('⬅️').setStyle(ButtonStyle.Primary),
                 new ButtonBuilder().setCustomId('next').setEmoji('➡️').setStyle(ButtonStyle.Primary)
             )
-        ]
+        ];
         await interaction.reply({ embeds: [emebed], components});
 
         const collector = interaction.channel.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000});
@@ -59,7 +59,7 @@ module.exports = {
             if (i.user.id !== interaction.user.id) {
                 return; 
             }
-            const userState = activeCollectors.get(interaction.user.id)
+            const userState = activeCollectors.get(interaction.user.id);
             const action = i.customId;
             try {
                 switch(action){
@@ -78,15 +78,15 @@ module.exports = {
                         }
                         emebed.description = `Now Playing: ${queue.currentTrack.title} | ${queue.currentTrack.author}\n\n${tracks.slice(userState.queueStart, userState.queueStart + 5).join('\n')}`;
                         emebed.footer = { text: `Queue ${userState.queueStart + 1} - ${userState.queueStart + 5} of ${songs} songs`};
-                        activeCollectors.set(interaction.user.id, userState)
-                        await i.update({ embeds: [emebed], components})
+                        activeCollectors.set(interaction.user.id, userState);
+                        await i.update({ embeds: [emebed], components});
                         break;
                     case "next": 
                         userState.queueStart += 5;
                         emebed.description = `Now Playing: ${queue.currentTrack.title} | ${queue.currentTrack.author}\n\n${tracks.slice(userState.queueStart, (userState.queueStart + 5 <= songs) ? userState.queueStart + 5 : songs).join('\n')}`;
                         emebed.footer = { text: `Queue ${userState.queueStart + 1} - ${userState.queueStart + 5} of ${songs} songs`};
-                        activeCollectors.set(interaction.user.id, userState)
-                        await i.update({ embeds: [emebed], components})
+                        activeCollectors.set(interaction.user.id, userState);
+                        await i.update({ embeds: [emebed], components});
                         break;
                 }
             } catch (err) {
@@ -95,7 +95,7 @@ module.exports = {
         });
         collector.on('end', async () => {
             activeCollectors.delete(interaction.user.id);
-            return await interaction.editReply({ embeds: [emebed], components: []})
+            return await interaction.editReply({ embeds: [emebed], components: []});
 
         });
     }

@@ -55,9 +55,9 @@ module.exports = {
             });
 
 
-        })
+        });
     }
-}
+};
 
 class highLowGameState {
     constructor(betAmount, userCurrency, user) {
@@ -73,7 +73,7 @@ class highLowGameState {
         
         if (choice !== 'Cashout') {
             const newCard = this.drawCard();
-            const result = this.compareCards(this.currentCard, newCard, choice)
+            const result = this.compareCards(this.currentCard, newCard, choice);
 
             if (result === 'correct') {
                 this.winCount++;
@@ -84,7 +84,7 @@ class highLowGameState {
                 embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
                 return await interaction.update({ embeds: [embed], components: this.components , files: [this.currentCard.cardFile]});
             } else if (result === 'draw') {
-                this.currentCard = newCard
+                this.currentCard = newCard;
 
                 const embed = this.createGameEmbed(interaction.user, newCard);
                 embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
@@ -106,7 +106,7 @@ class highLowGameState {
         const oldCardValue = this.getCardValue(oldCard.value);
         const newCardValue = this.getCardValue(newCard.value);
         if ((choice === 'higher' && newCardValue > oldCardValue) || (choice === 'lower' && newCardValue < oldCardValue)) {
-                return 'correct'
+                return 'correct';
             } else if (newCardValue === oldCardValue) {
                 return 'draw';
             }
@@ -164,7 +164,7 @@ class highLowGameState {
             image: {
                 url: `attachment://${fileName}`
             }
-        }
+        };
     }
 
 }

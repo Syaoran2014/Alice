@@ -279,7 +279,7 @@ class DataHandler {
           return;
         }
       }
-    )
+    );
   }
 
   populateDisabledCmds(guild) {

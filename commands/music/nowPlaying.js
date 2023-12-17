@@ -14,7 +14,7 @@ module.exports = {
         }
 
         const track = queue.currentTrack;
-        const progress = queue.node.createProgressBar();
+        //const progress = queue.node.createProgressBar();
 
         //util.logger.log(JSON.stringify(track, null, 4));
         //Update to be a console.
