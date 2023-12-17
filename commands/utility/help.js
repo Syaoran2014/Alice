@@ -1,47 +1,50 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 module.exports = {
   category: 'utility',
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Responds with list of available commands."),
-    execute: async function(interaction, util) {
-      const categories = new Set(util.commandHandler.sCommands.map(cmd => cmd.category));
-      const options = Array.from(categories).map(category => ({
-          label: category.charAt(0).toUpperCase() + category.slice(1),
-          value: category,
-      }));
+  execute: async function(interaction, util) {
+    const commandList = Object.values(util.commandHandler.commands);
 
-      const selectMenu = new SelectMenuBuilder()
-          .setCustomId('select-category')
-          .setPlaceholder('Select a Category')
-          .addOptions(options);
+    const categories = new Set(commandList.map(cmd => cmd.category));
+    const options = Array.from(categories).map(category => ({
+        label: category.charAt(0).toUpperCase() + category.slice(1),
+        value: category,
+    }));
 
-      const row = new ActionRowBuilder().addComponents(selectMenu);
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId('select-category')
+        .setPlaceholder('Select a Category')
+        .addOptions(options);
 
-      await interaction.reply({ content: 'Select a category to see its commands:', components: [row], ephemeral: true });
+    const row = new ActionRowBuilder().addComponents(selectMenu);
 
-      const filter = (i) => i.customId === 'select-category' && i.user.id === interaction.user.id;
-      const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+    await interaction.reply({ content: 'Select a category to see its commands:', components: [row], ephemeral: true });
 
-      collector.on('collect', async (i) => {
-          const selectedCategory = i.values[0];
-          const categoryCommands = util.commandHandler.sCommands.filter(cmd => cmd.category === selectedCategory);
+    const filter = (i) => i.customId === 'select-category' && i.user.id === interaction.user.id;
+    const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
 
-          const embed = new EmbedBuilder()
-              .setColor('f0ccc0')
-              .setTitle(`${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Commands`)
-              .setDescription(categoryCommands.map(cmd => `**/${cmd.name}** - ${cmd.description}`).join('\n'))
-              .setTimestamp();
+    collector.on('collect', async (i) => {
+        const selectedCategory = i.values[0];
+        const categoryCommands = commandList.filter(cmd => cmd.category === selectedCategory);
 
-          await i.update({ embeds: [embed], components: [] });
-      });
+        const embed = new EmbedBuilder()
+            .setColor('f0ccc0')
+            .setTitle(`${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Commands`)
+            .setDescription(categoryCommands.map(cmd => `**/${cmd.data.name}** - ${cmd.data.description}`).join('\n'))
+            .setTimestamp();
 
-      collector.on('end', collected => {
-          if (collected.size === 0) {
-              interaction.editReply({ content: 'Command selection timed out.', components: [] });
-          }
-      });
+        await i.update({ embeds: [embed], components: [] });
+        collector.stop();
+    });
+
+    collector.on('end', collected => {
+        if (collected.size === 0) {
+            interaction.editReply({ content: 'Command selection timed out.', components: [] });
+        }
+    });
   }
     /*
   execute: async function (interaction, util) {

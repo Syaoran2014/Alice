@@ -4,8 +4,8 @@
 - [✓] Update CommandHandler - Put the Commands in subfolders for organization
   - [✓] Update Help command to account for this.
   - [✓] Make commands first letter capitalized  
-- [] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc) 
-  - [] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
+- [✓] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc) 
+  - [✓] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
 - [✓] Voice Chat integration
   - [✓] Music Player
   - [✓] BUG: Figure out Connection Reset Issue
@@ -15,22 +15,24 @@
     - [✓] Add djRole column in ServerConfig 
   - [✓] Add shuffle, playNext, nowPlaying
   - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
-  - [] Update queue to cycle and show more. 
+  - [✓] Update queue to cycle and show more. 
 - [] Malort
 - [✓] Economy / Alcoins? Malorkles?
-  - [] New Table for RPG Items?
-    - [] tableName UserEconomy
-    - [] UserID, Currency, inventory
-      - [] Inventory needs blob - houses json
-       - [] ie { "fish": 1, "meat": 1}
-  - [] Chat messages generate
+  - [✓] New Table for RPG Items?
+    - [✓] tableName UserEconomy
+    - [✓] UserID, Currency, inventory
+      - [✓] Inventory needs blob - houses json
+       - [✓] ie { "fish": 1, "meat": 1}
+  - [✓] Chat messages generate
+  - [✓] Update services to generate Correctly
   - [] Hunt/Fish
-  - [] Gambling
+  - [✓] Gambling
     - [✓] Blackjack
     - [✓] CoinToss
     - [✓] D100 BetRoll 
     - [] Slots
-    - [] ?
+    - [✓] higher lower
+    - [✓] Rock paper Scissors
 - [] Update Profile command for Image manipulation, Create Better looking profiles
 - [] Determine in my current Database structure supports this.....
   - [] Port over to AWS Database? 

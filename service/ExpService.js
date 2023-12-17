@@ -168,7 +168,7 @@ class ExpService {
               this.util.logger.error(err.message);
               return; 
             } 
-            this.util.logger.log(`${user.username} leveled to ${currentLevel + 1}, and gained ${newXp} Xp.`);
+            //this.util.logger.log(`${user.username} leveled to ${currentLevel + 1}, and gained ${newXp} Xp.`);
           });
       } else {
         this.util.dataHandler.getDatabase().run(
@@ -179,7 +179,7 @@ class ExpService {
               this.util.logger.error(err.message);
               return; 
             } 
-            this.util.logger.log(`${user.username} gained ${newXp} Xp.`);
+            //this.util.logger.log(`${user.username} gained ${newXp} Xp.`);
           }
         );
       }

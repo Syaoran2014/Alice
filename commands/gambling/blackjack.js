@@ -247,7 +247,7 @@ async function handlePayout(user, currency, payout, util) {
         "UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?;",
         [updatedCurrency, user]
     );
-    util.logger.log(`Currency adjusted by ${payout}, started with ${currency}, now has ${updatedCurrency}.`);
+    // util.logger.log(`Currency adjusted by ${payout}, started with ${currency}, now has ${updatedCurrency}.`);
 }
 
 class BlackjackGameState {
