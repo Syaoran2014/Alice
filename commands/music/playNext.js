@@ -3,6 +3,7 @@ const { useMainPlayer, useQueue, QueryType } = require("discord-player");
 const { userSearchStatus } = require(`./play`);
 
 module.exports = {
+    category: 'music',
   data: new SlashCommandBuilder()
     .setName("playnext")
     .setDescription("Forces song to play next in queue")
@@ -27,14 +28,14 @@ module.exports = {
         const player = useMainPlayer();
         const queue = useQueue(interaction.guild);
         const song = interaction.options.getString('song', true);
-        const setPlatform = interaction.options.getString('platform')
+        const setPlatform = interaction.options.getString('platform');
         var platform = null; 
         if (setPlatform){
             platform = setPlatform;
         }
 
         if(userSearchStatus.has(interaction.user.id)){
-            return interaction.reply({ content: `Please complete your last search first before starting a new one!`, ephemeral: true})
+            return interaction.reply({ content: `Please complete your last search first before starting a new one!`, ephemeral: true});
         }
         userSearchStatus.set(interaction.user.id, true);
 
@@ -43,12 +44,12 @@ module.exports = {
 
         if (!queue || !queue.isPlaying()){
             //If queue doesn't exist, go ahead and play instead of queue....
-            return interaction.followUp(`Nothing is currently in queue, Please use /play instead!\n This feature will be added later! ☆～（ゝ。∂）`)
+            return interaction.followUp(`Nothing is currently in queue, Please use /play instead!\n This feature will be added later! ☆～（ゝ。∂）`);
         }
         const noResultsEmbed = {
             color: parseInt("2f3136", 16),
             title: "No results found... please try again!"
-        }
+        };
         const noVoiceEmbed = {
             title: "I'm unable to join the voice channel... Please try again!\n If issue persists, please contact bot owner",
             color: parseInt("2f3136", 16),
@@ -80,22 +81,22 @@ module.exports = {
                 leaveOnEndCooldown: 30000,
                 volume: 5, //Update to 50... Maybe leave at 5?? It sounds fine....
             });
-    
+            //Channel Not defined, Shouldn't ever cause an error do to needing to play to begin with....
             try {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
     
-                return interaction.followUp({ embeds: [noVoiceEmbed]})
+                return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 
             const nextSongAdded = {
                 title: `Track was successfully added to the front of the queue... ✅`,
                 description: `${res.tracks[0]}`,
                 color: parseInt("f0ccc0", 16),
-            }
+            };
     
-            await interaction.followUp({ embeds: [nextSongAdded]})
+            await interaction.followUp({ embeds: [nextSongAdded]});
     
             queue.insertTrack(res.tracks[0], 0);
             userSearchStatus.delete(interaction.user.id);
@@ -119,13 +120,13 @@ module.exports = {
                 leaveOnEndCooldown: 30000,
                 volume: 5, //Update to 50... Maybe leave at 5?? It sounds fine....
             });
-
+            //Same here with channel issue, should always be in a channel with this command.....
             try {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
     
-                return interaction.followUp({ embeds: [noVoiceEmbed]})
+                return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 
             const firstFiveTracks = res.tracks.slice(0, 5);
@@ -145,7 +146,7 @@ module.exports = {
             trackListEmbed.fields.push({
                 name: `\u200B`,
                 value: `To cancel the selection reply with 'x'`,
-            })
+            });
 
             await interaction.followUp({ embeds: [trackListEmbed]});
 
@@ -162,25 +163,26 @@ module.exports = {
                 const userChoice = Number(collected.first().content);
                 const selectedTrack = firstFiveTracks[userChoice - 1];
 
-                queue.insertTrack(res.tracks[0], 0);
-                userSearchStatus.delete(interaction.user.id);
-
-                const selectedEmbed = {
-                    title: `Track was successfully added to the front of the queue... ✅`,
-                    description: `${selectedTrack.title} by ${selectedTrack.author}`,
-                    color: parseInt("f0ccc0", 16),
-                };
-                interaction.editReply({ embeds: [selectedEmbed]})
-
+                if (userChoice != 'x') {
+                    queue.insertTrack(res.tracks[userChoice], 0);
+                    userSearchStatus.delete(interaction.user.id);
+                
+                    const selectedEmbed = {
+                        title: `Track was successfully added to the front of the queue... ✅`,
+                        description: `${selectedTrack.title} by ${selectedTrack.author}`,
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    interaction.editReply({ embeds: [selectedEmbed]});
+                }   
                 //Update to catch and emit the playerStart 
             }).catch((err) => {
                 const cancelledSearch = {
                     description: `Search cancelled or aborted due to time out or user request.`,
                     color: parseInt("f0ccc0", 16),
-                }
+                };
                 userSearchStatus.delete(interaction.user.id);
-                interaction.editReply({ embeds: [cancelledSearch]})
-            })
+                interaction.editReply({ embeds: [cancelledSearch]});
+            });
         }
     },
 

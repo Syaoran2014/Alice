@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName("test")
     .setDescription("Command used for testing items in development."),
@@ -8,6 +9,7 @@ module.exports = {
     await interaction.reply({
       content: "Nothing in testing! Try again later (*^ ‿ <*)♡ ",
     });
+
   },
 
   callback: async function (msg, args, util) {},

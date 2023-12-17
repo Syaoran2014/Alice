@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
+  category: 'administration',
   data: new SlashCommandBuilder()
     .setName("setdj")
     .setDescription("Command used to set a DJ role.")
@@ -18,8 +19,8 @@ module.exports = {
             return interaction.reply({ content: "You must specify a role for logging!"});
         }
         util.dataHandler.getDatabase().run("UPDATE ServerConfig SET DjRole = ? WHERE GuildId = ?",
-        [djRole.id, cServer])
-        return interaction.reply({ content: `Dj Role has been set to ${djRole} for the ${interaction.guild} server!`})
+        [djRole.id, cServer]);
+        return interaction.reply({ content: `Dj Role has been set to ${djRole} for the ${interaction.guild} server!`});
     },
 
     callback: async function (msg, args, util) {},

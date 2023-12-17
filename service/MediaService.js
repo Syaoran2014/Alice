@@ -1,5 +1,5 @@
 const { Player } = require('discord-player');
-const mediaConfig = require('../data/mediaConfig')
+const mediaConfig = require('../data/mediaConfig');
 
 class MediaService {
     constructor(util) {

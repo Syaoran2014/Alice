@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { useMainPlayer, useQueue } = require("discord-player");
+const { useQueue } = require("discord-player");
 
 module.exports = {
+  category: 'music',
   data: new SlashCommandBuilder()
     .setName("shuffle")
     .setDescription("Command used to shuffle the music queue."),
@@ -17,7 +18,7 @@ module.exports = {
     const shuffleEmbed = {
         title: `Queue has shuffled ${queue.tracks.size} song(s)`,
         color: parseInt("f0ccc0", 16),
-    }
+    };
     return interaction.reply({ embeds: [shuffleEmbed]});
   },
 

@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+    category: 'utility',
     data: new SlashCommandBuilder()
         .setName("profile")
         .setDescription("Shows User Profile and information")
@@ -11,7 +12,7 @@ module.exports = {
               .setRequired(false)),
     execute: async function (interaction, util) {
         const userOption = interaction.options.getUser('target');
-        const user = userOption ? userOption.id : interaction.user.id
+        const user = userOption ? userOption.id : interaction.user.id;
         util.dataHandler.getUserInfo(user, (err, userInfo) => {
             if (err){
                 util.logger.error(err.message);
@@ -28,18 +29,19 @@ module.exports = {
                 const currentLevel = userInfo.ChatLvl;
                 const xp = parseInt(userInfo.ChatExp);
                 const nextLvlExp = userInfo.LevelXp;
+                const currency = userInfo.Currency;
 
                 const embed = {
                     color: parseInt("f0ccc0", 16),
                     title: `${pUser} user profile`,
-                    description: `Level ${currentLevel}: ${xp}/${nextLvlExp}`,
+                    description: `Level ${currentLevel}: ${xp}/${nextLvlExp}\nCurrency: ${currency}`,
                 };
 
                 return interaction.reply({
                     embeds: [embed],
                 });
             }
-        })
+        });
     },
     callback: async function (msg, args, util) {
         

@@ -3,6 +3,7 @@ const CardinalBot = require("./utility/bot.js");
 const CardinalLogger = require("./utility/CardinalLogger.js");
 const DataHandler = require("./utility/DataHandler.js");
 const ServiceHandler = require("./utility/ServiceHandler.js");
+const ScheduleHandler = require("./utility/scheduleHandler.js");
 const fs = require("node:fs");
 const path = require("node:path");
 const Discord = require("discord.js");
@@ -38,7 +39,16 @@ util.bot = new Discord.Client({
 util.commandHandler = new CommandHandler(util);
 util.services = new ServiceHandler(util);
 util.dataHandler = new DataHandler(util);
+util.schedule = new ScheduleHandler(util);
 util.BotClass = new CardinalBot(util);
+
+// const handleTermination = () => {
+//   util.logger.log('\nBot is shutting down...');
+//   util.commandHandler.deleteAllCommands();
+//   util.bot.destroy();
+// };
+// process.on('SIGINT', handleTermination);
+
 
 // This doesn't work in d.js V14 OR I've implemented it wrong
 

@@ -71,7 +71,7 @@ class DataHandler {
       });
     this.db
       .run(
-        "CREATE TABLE IF NOT EXISTS DiscordUserData (UserID	INTEGER NOT NULL UNIQUE, UserName TEXT NOT NULL, GuildId INTEGER, VIP_Tier INTEGER, VIPLevel INTEGER, VIP_Exp INTEGER, LevelXp INTEGER, Xp INTEGER, ChatLvl INTEGER, TotalXp INTEGER, ChatExp BLOB, Birthday TEXT, LastXpGain TEXT, PRIMARY KEY(UserID));"
+        "CREATE TABLE IF NOT EXISTS DiscordUserData (UserID	INTEGER NOT NULL UNIQUE, UserName TEXT NOT NULL, GuildId INTEGER, VIP_Tier INTEGER, VIPLevel INTEGER, VIP_Exp INTEGER, LevelXp INTEGER, Xp INTEGER, ChatLvl INTEGER, TotalXp INTEGER, ChatExp BLOB, Birthday TEXT, LastXpGain TEXT, Currency INTEGER, Inventory BLOB, DailyStreak INTEGER, LastDailyClaim TEXT, PRIMARY KEY(UserID));"
       )
       .on("error", (err) => {
         util.logger.error(
@@ -80,10 +80,11 @@ class DataHandler {
         );
       });
 
-      this.checkAndUpdateSchema();
+      this.checkAndUpdateServerSchema();
+      this.checkAndUpdateUserSchema();
   }
 
-  checkAndUpdateSchema() {
+  checkAndUpdateServerSchema() {
     const desiredSchema = [
       "GuildId VARCHAR(18) NOT NULL", 
       "LogEnabled BOOLEAN",
@@ -105,15 +106,67 @@ class DataHandler {
         .filter((column) => !existingColumns.includes(column.split(" ")[0]));
 
       if (missingColumns.length > 0) {
-        const updateSQL = `ALTER TABLE ServerConfig ADD COLUMN ${missingColumns.join(", ")};`;
-
-        this.db.run(updateSQL, (updateErr) => {
-          if (updateErr) {
-            this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
-          } else {
-            this.util.logger.log("Updated table schema.");
-          }
+        missingColumns.forEach((column) => {
+          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`;
+          this.db.run(updateSQL, (updateErr) => {
+            if (updateErr) {
+              this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
+            } else {
+              this.util.logger.log("Updated table schema.");
+            }
+          });
         });
+      }
+    });
+  }
+
+  checkAndUpdateUserSchema() {
+    const userSchema = [
+      "UserID INTEGER NOT NULL UNIQUE",
+      "UserName TEXT NOT NULL",
+      "GuildId INTEGER",
+      "VIP_Tier INTEGER",
+      "VIPLevel INTEGER",
+      "VIP_Exp INTEGER",
+      "LevelXp INTEGER",
+      "Xp INTEGER",
+      "ChatLvl INTEGER",
+      "TotalXp INTEGER",
+      "ChatExp BLOB",
+      "Birthday TEXT",
+      "LastXpGain TEXT",
+      "Currency INTEGER",
+      "Inventory BLOB",
+      "DailyStreak INTEGER",
+      "LastDailyClaim TEXT"
+    ];
+    this.db.all("PRAGMA table_info(DiscordUserData);", (err, rows) => {
+      if (err){
+        this.util.logger.error("Error occurred while checking table schema: " + err.message);
+        return;
+      }
+      const existingColumns = rows.map((row) => row.name);
+      const missingColumns = userSchema.filter((column) => !existingColumns.includes(column.split(" ")[0]));
+      if (missingColumns.length > 0) {
+        
+        missingColumns.forEach((column) => {
+          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`;
+          this.db.run(updateSQL, (updateErr) => {
+            if (updateErr) {
+              this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
+            } else {
+              this.util.logger.log("Updated table schema.");
+            }
+          });
+        });
+        //const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${missingColumns.join(", ")};`;
+        // this.db.run(updateSQL, (updateErr) => {
+        //   if (updateErr) {
+        //     this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
+        //   } else {
+        //     this.util.logger.log("Updated table schema.");
+        //   }
+        // });
       }
     });
   }
@@ -170,8 +223,61 @@ class DataHandler {
           ChatExp: row.ChatExp,
           Birthday: row.Birthday,
           LastXpGain: row.LastXpGain,
+          Currency: row.Currency,
+          Inventory: row.Inventory,
+          DailyStreak: row.DailyStreak,
+          LastDailyClaim: row.LastDailyClaim
         };
         callback(err, res);
+      }
+    );
+  }
+
+  initializeUserInfo(user, guildId) {
+    const initialUserData = {
+      UserId: user.id,
+      UserName: user.username,
+      GuildId: guildId,
+      VIP_Tier: 0,
+      VIPLevel: 0,
+      VIP_Exp: 0,
+      LevelXp: 100,
+      Xp: 0,
+      ChatLvl: 1,
+      TotalXp: 0,
+      ChatExp: 10,
+      Birthday: null,
+      LastXpGain: null,
+      Currency: 100,
+      Inventory: JSON.stringify(`{}`),
+      DailyStreak: null,
+      LastDailyClaim: null
+    };
+
+    this.util.dataHandler.getDatabase().run(
+      "INSERT INTO DiscordUserData (UserId, UserName, GuildId, VIP_Tier, VIPLevel, VIP_Exp, LevelXp, Xp, ChatLvl, TotalXp, ChatExp, Birthday, LastXpGain, Currency, Inventory, DailyStreak, LastDailyClaim) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+      Object.values(initialUserData),
+      (err) => {
+        if (err) {
+          this.util.logger.error(err.message);
+          return;
+        }
+        this.util.logger.log(
+          `Initialized user data for ${user.username}`
+        );
+      }
+    );
+  }
+
+  payout(userId, payout) {
+    this.getDatabase().run(
+      "UPDATE DiscordUserData Set Currency = Currency + ? WHERE UserId = ?",
+      [payout, userId],
+      (err) => {
+        if (err) {
+          this.util.logger.error(err.message);
+          return;
+        }
       }
     );
   }
