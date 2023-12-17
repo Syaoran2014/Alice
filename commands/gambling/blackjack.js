@@ -51,14 +51,17 @@ module.exports = {
                 gameState.gameEnded = true; 
                 userGames.delete(interaction.user.id);
                 betAmount = betAmount * 1.5;
+                handlePayout(userId, userCurrency, betAmount, util);
                 return await interaction.reply({content : `***Blackjack! You WIN! *** +${betAmount}`, embeds: [playingEmbed]});
             } else if (dealerScore === 21 && currentHand.length === 2) {
                 gameState.gameEnded = true; 
                 userGames.delete(interaction.user.id);
                 playingEmbed.description = `Dealer's Hand: \nTotal: ${dealerScore} \n${gameState.formatHand(gameState.dealerHand)}`;
+                betAmount = betAmount * -1;
+                handlePayout(userId, userCurrency, betAmount, util);
                 return await interaction.reply({content : `Dealer Blackjack, You Lose...`, embeds: [playingEmbed]});
             } else {
-                await await interaction.reply({ content: `Playing Hand ${gameState.handIndex + 1}`, embeds: [playingEmbed], components: gameState.components, fetchReply: true});
+                await interaction.reply({ content: `Playing Hand ${gameState.handIndex + 1}`, embeds: [playingEmbed], components: gameState.components, fetchReply: true});
 
             }
 
@@ -94,108 +97,9 @@ module.exports = {
                 } catch (error) {
                     util.logger.error("Error in game collector: ", error);
                 }
-
-
-                /*
-                if (i.customId === 'hit') {
-                    currentHand.push(gameState.drawCard());
-
-                    const playerScore = gameState.calculateScore(currentHand);
-
-                    // util.logger.log(`${JSON.stringify(currentHand)} --- Total: ${playerScore}`);
-
-                    if (playerScore < 22) {
-                        playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                        await i.update({content: `Playing Hand ${gameState.handIndex + 1}`, embeds: [playingEmbed], components });
-                    }else if (playerScore > 21) {
-                        if (gameState.handIndex < gameState.playerHands.length - 1) {
-                            playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                            await i.update({content: `Playing Hand ${gameState.handIndex + 2}`, embeds: [playingEmbed], components });
-                            gameState.handIndex++;
-                            currentHand = gameState.playerHands[gameState.handIndex];
-                        } else {
-                            gameState.gameEnded = true;
-                            collector.stop();
-                            playingEmbed.fields[0].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                            return i.update({ content: `***Bust!***`, embeds: [playingEmbed], components: [] });
-                        }
-                    }
-                } else if (i.customId === 'stand') {
-                    if (gameState.handIndex < gameState.playerHands.length - 1) {
-                        await i.update({content: `Playing Hand ${gameState.handIndex + 1}`, embeds: [playingEmbed], components });
-                        gameState.handIndex++;
-                        currentHand = gameState.playerHands[gameState.handIndex];
-                    } else { 
-                        gameState.gameEnded = true; 
-                        collector.stop();
-                    }
-                } else if (i.customId === 'double') {
-                    if (currentHand.length === 2) {
-                        gameState.betAmount *= 2;
-                        currentHand.push(gameState.drawCard());
-                        const playerScore = gameState.calculateScore(currentHand);
-
-                        // util.logger.log(`${JSON.stringify(currentHand)} --- ${handIndex}`)
-                        
-                        if (gameState.handIndex < gameState.playerHands.length - 1) {
-                            if (playerScore > 21) {
-                                playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                                currentHand = gameState.playerHands[gameState.handIndex];
-                                await i.update({ content: `***Bust!*** Playing Hand ${gameState.handIndex + 2}`, embeds: [playingEmbed] });
-                            } else {
-                                playingEmbed.fields[handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                                currentHand = gameState.playerHands[gameState.handIndex];
-                                await i.update({ embeds: [playingEmbed] });
-                            }
-                            gameState.handIndex++;
-                            currentHand = gameState.playerHands[gameState.handIndex];
-                        } else {
-                            gameState.gameEnded = true;
-                            if (playerScore > 21) {
-                                playingEmbed.fields[handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                                currentHand = gameState.playerHands[handIndex];
-                                await i.update({ content: `***Bust!***`, embeds: [playingEmbed], components: [] });
-                            } else {
-                                playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-                                currentHand = gameState.playerHands[gameState.handIndex];
-                                await i.update({ embeds: [playingEmbed], components: [] });
-                            }
-                            collector.stop();
-                        }
-                    } else {
-                        return i.update({ content: `Unable to double down, try a different option.`});
-                    }
-                } else if (i.customId === 'split') {
-                    if (gameState.isHandSplittable(currentHand)) {
-                        //Handle's New hand
-                        let splitCard = currentHand.pop();
-                        let newHand = [splitCard, gameState.drawCard()];
-                        gameState.playerHands.push(newHand);
-
-                        // let newField = { 
-                        //     name: '\u200B', 
-                        //     value: `Player's Hand ${playerHands.length}:\nTotal: ${calculateScore(newHand)}\n${formatHand(newHand)}`,
-                        // };
-
-                        // playingEmbed.fields.push(newField)
-
-                        playingEmbed = gameState.createGameEmbed(i.user);
-
-                        //Handles Current Hand
-                        currentHand.push(gameState.drawCard());
-                        playerScore = gameState.calculateScore(currentHand);
-                        playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
-
-                        await i.update({content: `Playing Hand ${gameState.handIndex + 1}`, embeds: [playingEmbed], components});
-                        // util.logger.log(JSON.stringify(playingEmbed.fields[0]));
-                    } else {
-                        await i.update({ content: `Unable to split, try a different option.`});
-                    }
-                }
-                */
             });
 
-            collector.on('end', async collected => {
+            collector.on('end', async () => {
                 if(!gameState.gameEnded) {
                     userGames.delete(interaction.user.id);
                     return interaction.editReply({ content: 'Game nullified, timeout was reached', components: []});
@@ -208,6 +112,7 @@ module.exports = {
 
                     playingEmbed.description = `Dealer's Hand: \nTotal: ${dealerScore} \n${gameState.formatHand(gameState.dealerHand)}`;
                     let currentIndex = 0;
+                    let payout = 0;
                     gameState.playerHands.forEach((hand) => {
                         // util.logger.log(JSON.stringify(hand));
                         playerScore = gameState.calculateScore(hand);
@@ -215,18 +120,22 @@ module.exports = {
                         if (playerScore > 21) {
                             playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... ${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
+                            payout = payout - gameState.betAmount[currentIndex];
                         } else if ((playerScore > dealerScore && playerScore < 22) || (dealerScore > 21)) {
                             playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} WINS! ${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
+                            payout = payout + gameState.betAmount[currentIndex];
                         } else if ( playerScore < dealerScore || playerScore > 21) {
                             playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... ${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
+                            payout = payout - gameState.betAmount[currentIndex];
                         } else {
                             playingEmbed.fields[currentIndex].name = `Push`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
                         }
                         currentIndex++;
                     });
+                    handlePayout(userId, userCurrency, payout, util); 
                     userGames.delete(interaction.user.id);
                     return await interaction.editReply({ embeds: [playingEmbed], components: [] });
                 }
@@ -255,7 +164,7 @@ async function handleHit(gameState, interaction, collector) {
         } else {
             gameState.gameEnded = true;
             collector.stop();
-            playingEmbed.fields[0].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
+            playingEmbed.fields[gameState.handIndex].value = `Player's Hand ${gameState.handIndex + 1}:\nTotal: ${playerScore} \n${gameState.formatHand(currentHand)}`;
             return interaction.update({ content: `***Bust!***`, embeds: [playingEmbed], components: [] });
         }
     }
@@ -330,6 +239,15 @@ async function handleSplit(gameState, interaction) {
     } else {
         await interaction.update({ content: `Unable to split, try a different option.`});
     }
+}
+
+async function handlePayout(user, currency, payout, util) {
+    var updatedCurrency = currency + payout;
+    util.dataHandler.getDatabase().run(
+        "UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?;",
+        [updatedCurrency, user]
+    );
+    util.logger.log(`Currency adjusted by ${payout}, started with ${currency}, now has ${updatedCurrency}.`);
 }
 
 class BlackjackGameState {

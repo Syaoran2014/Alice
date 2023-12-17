@@ -9,6 +9,7 @@ module.exports = {
     await interaction.reply({
       content: "Nothing in testing! Try again later (*^ ‿ <*)♡ ",
     });
+
   },
 
   callback: async function (msg, args, util) {},

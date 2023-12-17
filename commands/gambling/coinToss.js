@@ -30,7 +30,7 @@ module.exports = {
             return interaction.reply({ content: "Something didn't process right, Please contact bot owner"});
         }
         if (!userInfo) {
-            return interaction.reply({ content: "Your user data has likely not been initialized!\n Send a normal message and try again!"});
+            return interaction.reply({ content: "Your user data has likely not been initialized!\n Please try again."});
         } else {
             const userCurrency = userInfo.Currency;
 

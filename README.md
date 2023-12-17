@@ -1,8 +1,26 @@
-# Cardinal - A Generic Discord Bot
+# Cardinal - A Generic AIO Discord Bot
 
 ## About
 
-This bot is currently a generic bot that started out in C# and has not been converted to JS.
+Cardinal is a JavaScript-based Discord bot developed for personal experimentation and coding practice. Its primary purpose is to amalgamate my favorite features from various bots into a single, versatile platform, enriched with unique twists and functionalities
 
-The idea behind this bot is generally just something for me to play around with and get practice coding.
-Ultimately the end goal is for this bot to do everything I like about other bots, but all in one, with my own twist on the module.
+## Setup
+
+Essential Requirement: Create a `config.json` file in the same directory as `index.js`.
+
+```json
+{
+  "token": "Bot_token_here",
+  "clientId": "Your bot's ClientId",
+  "guildId": "Your guild Id",
+  "prefix": "*"
+}
+```
+
+Current Limitation: The bot is designed for single-guild operations. If you're planning to deploy it across multiple guilds, consider enhancing the command handler to manage different guild IDs and incorporate an `onGuildJoin` listener for new guild registrations. This feature may be added in future updates.
+
+Starting the Bot: After setting up your `config.json`, execute `node start` (developed using Node v21). This action initializes a database file in the data folder, which can be renamed in the DataHandler file.
+
+Operational Note: The bot is designed to provide essential functionalities without premium charges. All features are freely accessible, reflecting the ethos of open-source development.
+
+Also, check out Nadeko, another bot I appreciate for its free features.

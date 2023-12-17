@@ -233,6 +233,55 @@ class DataHandler {
     );
   }
 
+  initializeUserInfo(user, guildId) {
+    const initialUserData = {
+      UserId: user.id,
+      UserName: user.username,
+      GuildId: guildId,
+      VIP_Tier: 0,
+      VIPLevel: 0,
+      VIP_Exp: 0,
+      LevelXp: 100,
+      Xp: 0,
+      ChatLvl: 1,
+      TotalXp: 0,
+      ChatExp: 10,
+      Birthday: null,
+      LastXpGain: null,
+      Currency: 100,
+      Inventory: JSON.stringify(`{}`),
+      DailyStreak: null,
+      LastDailyClaim: null
+    };
+
+    this.util.dataHandler.getDatabase().run(
+      "INSERT INTO DiscordUserData (UserId, UserName, GuildId, VIP_Tier, VIPLevel, VIP_Exp, LevelXp, Xp, ChatLvl, TotalXp, ChatExp, Birthday, LastXpGain, Currency, Inventory, DailyStreak, LastDailyClaim) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+      Object.values(initialUserData),
+      (err) => {
+        if (err) {
+          this.util.logger.error(err.message);
+          return;
+        }
+        this.util.logger.log(
+          `Initialized user data for ${user.username}`
+        );
+      }
+    );
+  }
+
+  payout(userId, payout) {
+    this.getDatabase().run(
+      "UPDATE DiscordUserData Set Currency = Currency + ? WHERE UserId = ?",
+      [payout, userId],
+      (err) => {
+        if (err) {
+          this.util.logger.error(err.message);
+          return;
+        }
+      }
+    )
+  }
+
   populateDisabledCmds(guild) {
     this.getDatabase().run(
       "UPDATE ServerConfig SET DisabledCmds = ? WHERE GuildId = ?",

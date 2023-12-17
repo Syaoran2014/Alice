@@ -75,9 +75,9 @@ module.exports = {
             const queue = await player.nodes.create(interaction.guild, {
                 metadata: interaction.channel,
                 leaveOnEmpty: true,
-                leaveOnEmptyCooldown: 30000,
+                leaveOnEmptyCooldown: 60000,
                 leaveOnEnd: true,
-                leaveOnEndCooldown: 30000,
+                leaveOnEndCooldown: 60000,
                 volume: 5, //Update to 50... Maybe leave at 5?? It sounds fine....
             });
     
@@ -167,17 +167,19 @@ module.exports = {
                 const selectedTrack = firstFiveTracks[userChoice - 1];
 
                 userSearchStatus.delete(interaction.user.id);
-                queue.addTrack(res.tracks[0]);
+                if (userChoice != 'x') {
+                    queue.addTrack(res.tracks[userChoice - 1]);
 
-                const selectedEmbed = {
-                    title: `Loading the selected track to the queue... ✅`,
-                    description: `${selectedTrack.title} by ${selectedTrack.author}`,
-                    color: parseInt("f0ccc0", 16),
-                };
-                interaction.editReply({ embeds: [selectedEmbed]});
+                    const selectedEmbed = {
+                        title: `Loading the selected track to the queue... ✅`,
+                        description: `${selectedTrack.title} by ${selectedTrack.author}`,
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    interaction.editReply({ embeds: [selectedEmbed]});
 
-                //Update to catch and emit the playerStart 
-                if(!queue.isPlaying()) queue.node.play();
+                    //Update to catch and emit the playerStart 
+                    if(!queue.isPlaying()) queue.node.play();
+                }
             }).catch((err) => {
                 const cancelledSearch = {
                     description: `Search cancelled or aborted due to time out or user request.`,

@@ -26,7 +26,7 @@
   - [] Chat messages generate
   - [] Hunt/Fish
   - [] Gambling
-    - [] Blackjack
+    - [✓] Blackjack
     - [✓] CoinToss
     - [✓] D100 BetRoll 
     - [] Slots

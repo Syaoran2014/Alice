@@ -23,8 +23,7 @@ module.exports = {
         if(!guildInfo){
             return interaction.reply({ content: "No Server Info found, Please try again later."});
         } else {
-            const djRole = guildInfo.djRole;
-
+            const djRole = guildInfo.DjRole;
             const hasDjRole = member.roles.cache.has(djRole);
             const isAdmin = member.permissions.toArray().includes("Administrator");
             //util.logger.log(member.permissions.toArray())
