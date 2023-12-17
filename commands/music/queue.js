@@ -65,13 +65,14 @@ module.exports = {
                 switch(action){
                     case "previous":
                         if (userState.queueStart <= 5){
-                            if (i.user.id === `163538794388127744`) {
-                                return i.update({ content: "Fuck you Kyle", embeds: [emebed], components: [] });
-                            } else if (i.user.id === `221736432367173632`){
-                                return i.update({ content: "Fuck you too Joe", embeds: [emebed], components: [] });
-                            } else {
-                                userState.queueStart = 0;
-                            }
+                            userState.queueStart = 0;
+                            // if (i.user.id === `163538794388127744`) {
+                            //     return i.update({ content: "Fuck you Kyle", embeds: [emebed], components: [] });
+                            // } else if (i.user.id === `221736432367173632`){
+                            //     return i.update({ content: "Fuck you too Joe", embeds: [emebed], components: [] });
+                            // } else {
+                            //     userState.queueStart = 0;
+                            // }
                         } else {
                             userState.queueStart -= 5;
                         }
