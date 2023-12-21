@@ -32,13 +32,16 @@ module.exports = {
 
             const lastClaimDate = new Date(userInfo.LastDailyClaim);
 
-            if(lastClaimDate.getDate() === now.getDate() - 1 && 
-                lastClaimDate.getMonth() === now.getMonth() &&
-                lastClaimDate.getFullYear() === now.getFullYear()) {
-                    if (userInfo.DailyStreak === null) {
-                        userInfo.DailyStreak = 0; 
-                    }
-                    userInfo.DailyStreak += 1;
+            now.setHours(0, 0, 0, 0);
+            lastClaimDate.setHours(0, 0, 0, 0);
+            const timeDiff = now - lastClaimDate;
+            const diffDays = timeDiff / (1000 * 3600 * 24);
+
+            if (diffDays === 0 || diffDays === 1) {
+                if (userInfo.DailyStreak === null) {
+                    userInfo.DailyStreak = 0; 
+                }
+                userInfo.DailyStreak += 1;
             } else {
                 userInfo.DailyStreak = 1;
             }
