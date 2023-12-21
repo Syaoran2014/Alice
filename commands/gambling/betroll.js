@@ -24,7 +24,7 @@ module.exports = {
         } else {
             const userCurrency = userInfo.Currency;
 
-            if (betAmount > userCurrency) {
+            if (betAmount > userCurrency || betAmount >= 0) {
                 return interaction.reply({ content: `You do not have that amount, try again with a lower amount!`});
             } 
             

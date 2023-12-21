@@ -18,8 +18,13 @@ module.exports = {
     execute: async function (interaction, util) {
         const userId = interaction.user.id;
         const paidUser = interaction.options.getUser('user');
-        const amountToPay = interaction.options.getNumber('amount');
+        const amountToPay = Math.floor(interaction.options.getNumber('amount'));
 
+        if (amountToPay < 0) {
+            return interaction.reply(`You can't send lower than 0`);
+        }
+        
+        
         util.dataHandler.getUserInfo(userId, (err, userInfo) => {
             if (err){
                 util.logger.error(err.message);

@@ -46,6 +46,7 @@ const handleTermination = () => {
   util.logger.log('\nBot is shutting down...');
   util.commandHandler.deleteAllCommands();
   util.bot.destroy();
+  process.exit();
 };
 process.on('SIGINT', handleTermination);
 

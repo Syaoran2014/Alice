@@ -21,11 +21,15 @@ module.exports = {
           .setDescription("Amount you would like to wager.")
           .setRequired(true)),
     execute: async function (interaction, util) { 
-        const betAmount = interaction.options.getNumber('wager');
+        let betAmount = interaction.options.getNumber('wager');
         const choice = interaction.options.getString('choice');
         const userId = interaction.user.id;
         let winAmount = 0;
-
+        if (betAmount < 0) {
+            return interaction.reply("Nice Try, You can't bet negative numbers");
+        }
+        betAmount = Math.floor(betAmount);
+ 
         util.dataHandler.getUserInfo(userId, (err, userInfo) => {
             if (err) {
                 util.logger.error(err);
