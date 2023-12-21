@@ -6,7 +6,7 @@ module.exports = {
     .setName("leaderboard")
     .setDescription("Leaderboard of top user's based on chat activity.")
     .addStringOption(option => option
-      .setName("leaderboard")
+      .setName("boardtype")
       .setDescription("Leaderboard type")
       .setRequired(false)
       .addChoices(
@@ -14,8 +14,10 @@ module.exports = {
         { name: 'Currency', value: 'cur'}
       )),
   execute: async function(interaction, util) {
-    const choice = interaction.options.getString('leaderboard');
-
+    const userChoice = interaction.options.getString('boardtype');
+    const choice = userChoice ? userChoice : "exp";
+    
+    util.logger.log(`${userChoice}, ${choice}`);
     switch(choice) {
       case "exp":
         util.dataHandler.getTopUsers(10, (err, topUsers) => {
@@ -35,6 +37,7 @@ module.exports = {
           };
           return interaction.reply({ embeds: [embed] });  
         });
+        break;
       case "cur":
         util.dataHandler.getTopCurrencyUsers(10, (err, topUsers) => {
           if (err) {
@@ -52,8 +55,8 @@ module.exports = {
             })),
         };
         return interaction.reply({ embeds: [embed] });  
-
         });
+        break;
     }
   },
   async callback(msg, args, util) {
