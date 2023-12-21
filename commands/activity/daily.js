@@ -51,7 +51,7 @@ module.exports = {
                 [dailyAmount, userInfo.DailyStreak, now.toISOString(), userId]
             );
             dailyCooldown.set(userId, Date.now());
-            return interaction.reply(`You gained your daily ${dailyAmount} Alcoins`);
+            return interaction.reply(`You gained your daily ${dailyAmount} Alcoins. Current Streak: ${userInfo.DailyStreak}`);
         });
 
 

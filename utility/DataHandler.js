@@ -312,6 +312,20 @@ class DataHandler {
     );
   }
 
+  getTopCurrencyUsers(limit, callback){
+    this.getDatabase().all(
+      "SELECT * FROM DiscordUserData ORDER BY Currency DESC LIMIT ?;",
+      [limit],
+      (err, rows) => {
+        if (err) {
+          this.util.logger.error(err.message);
+          callback(err, null);
+        }
+        callback(err, rows);
+      }
+    )
+  }
+
   executeSQL(sql) {
     this.db.run(sql);
   }
