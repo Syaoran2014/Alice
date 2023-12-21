@@ -74,7 +74,7 @@ module.exports = {
                         this.util.logger.error(err.message);
                         return;
                     }
-                return interaction.reply({ content: `Unfortunately you lost :(\nThe number was ${result}`});
+                return interaction.reply({ content: `Unfortunately you lost :(\nThe number was ${result}\n You lost -${betAmount}`});
                  });
             }
         }

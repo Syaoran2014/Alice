@@ -4,10 +4,40 @@ module.exports = {
   category: 'utility',
   data: new SlashCommandBuilder()
     .setName("leaderboard")
-    .setDescription("Leaderboard of top user's based on chat activity."),
+    .setDescription("Leaderboard of top user's based on chat activity.")
+    .addStringOption(option => option
+      .setName("leaderboard")
+      .setDescription("Leaderboard type")
+      .setRequired(false)
+      .addChoices(
+        { name: 'Experience', value: 'exp'},
+        { name: 'Currency', value: 'cur'}
+      )),
   execute: async function(interaction, util) {
-    util.dataHandler.getTopUsers(10, (err, topUsers) => {
-        if (err) {
+    const choice = interaction.options.getString('leaderboard');
+
+    switch(choice) {
+      case "exp":
+        util.dataHandler.getTopUsers(10, (err, topUsers) => {
+          if (err) {
+              this.util.logger.error(err.message);
+              return interaction.reply({
+                  content: "Something went wrong while fetching the leaderboard. Please try again later.",
+              });
+          }
+          const embed = {
+              color: parseInt("f0ccc0", 16),
+              title: "Top 10 Users by Experience",
+              fields: topUsers.map((user, index) => ({
+                  name: `${index + 1}. ${user.UserName}`,
+                  value: `Level ${user.ChatLvl} - Xp: ${user.ChatExp}/${user.LevelXp}`
+              })),
+          };
+          return interaction.reply({ embeds: [embed] });  
+        });
+      case "cur":
+        util.dataHandler.getTopCurrencyUsers(10, (err, topUsers) => {
+          if (err) {
             this.util.logger.error(err.message);
             return interaction.reply({
                 content: "Something went wrong while fetching the leaderboard. Please try again later.",
@@ -15,14 +45,16 @@ module.exports = {
         }
         const embed = {
             color: parseInt("f0ccc0", 16),
-            title: "Top 10 Users by Experience",
+            title: "Top 10 Users by Currency",
             fields: topUsers.map((user, index) => ({
                 name: `${index + 1}. ${user.UserName}`,
-                value: `Level ${user.ChatLvl} - Xp: ${user.ChatExp}/${user.LevelXp}`
+                value: `${user.Currency} Alcoins.`
             })),
         };
-        interaction.reply({ embeds: [embed] });
-    });
+        return interaction.reply({ embeds: [embed] });  
+
+        });
+    }
   },
   async callback(msg, args, util) {
     msg.channel.send(

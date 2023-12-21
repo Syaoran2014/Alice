@@ -39,6 +39,18 @@ module.exports = {
             } 
             
             const result = Math.random() < 0.5 ? 'heads' : 'tails'; 
+            const resultFile = `assets/cointoss/${result}.png`;
+            const fileName = resultFile.split('/').pop();
+
+            const gameEmbed = {
+                author: {
+                    icon_url: interaction.user.avatarURL()
+                },
+                image: {
+                    url: `attachment://${fileName}`
+                }
+            }
+
             if (result === choice) {
                 const paidAmount = userCurrency + betAmount;
                 util.dataHandler.getDatabase().run("UPDATE DiscordUserData SET Currency = ? WHERE UserId = ?",
@@ -48,7 +60,8 @@ module.exports = {
                       this.util.logger.error(err.message);
                       return;
                     }
-                    return interaction.reply(`Congrats! You WIN\nYou've won ${betAmount} Alcoins!`);
+                    gameEmbed.title = `Congrats! You WIN\nYou've won ${betAmount} Alcoins!`;
+                    return interaction.reply({ embeds: [gameEmbed], files: [resultFile]} );
                 });
             } else {
                 const lostAmount = userCurrency - betAmount;
@@ -59,7 +72,8 @@ module.exports = {
                         this.util.logger.error(err.message);
                         return;
                     }
-                    return interaction.reply({ content: `Unfortunately you lost, the coin was ${result} and you chose ${choice}`});
+                    gameEmbed.title = `You Lost -${betAmount} Alcoins\nThe coin was ${result}, you chose ${choice}`;
+                    return interaction.reply({ embeds: [gameEmbed], files: [resultFile]} );
                 });
             }
         }

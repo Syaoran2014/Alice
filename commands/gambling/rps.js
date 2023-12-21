@@ -43,35 +43,55 @@ module.exports = {
             const rps = ['rock', 'paper', 'scissors'];
             const result = rps[Math.floor(Math.random() * rps.length)];
 
+            const resultFile = `assets/rps/${result}.png`;
+            const fileName = resultFile.split('/').pop();
+
+            const gameEmbed = {
+                author: {
+                    icon_url: interaction.user.avatarURL(),
+                },
+                title: `RPS Game`,
+                image: {
+                    url: `attachment://${fileName}`
+                }
+            }
+
             if( choice === result ){
-                interaction.reply(`Draw! You chose ${choice}, and I chose ${result}`);
+                gameEmbed.title = `Draw! We both chose ${result}!\nSmart Choice.`
+                interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
             } else { 
                 switch(choice) {
                     case "rock": 
                         if (result === 'paper') {
                             winAmount -= betAmount;
-                            interaction.reply(`${result} beats ${choice}, You lost ${winAmount}.`);
+                            gameEmbed.title = `${result} beats ${choice}, You lost ${winAmount}.`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'scissors') {
                             winAmount += betAmount;
-                            interaction.reply(`${choice} beats ${result}, You win ${winAmount} Alcoins!`);
+                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;
                     case "paper":
                         if (result === 'scissors') {
                             winAmount -= betAmount;
-                            interaction.reply(`${result} beats ${choice}, You lost ${winAmount}.`);
+                            gameEmbed.title = `${result} beats ${choice}, You lost ${winAmount}.`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'rock') {
                             winAmount += betAmount;
-                            interaction.reply(`${choice} beats ${result}, You win ${winAmount} Alcoins!`);
+                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;
                     case "scissors":
                         if (result === 'rock') {
                             winAmount -= betAmount;
-                            interaction.reply(`${result} beats ${choice}, You lost ${winAmount}.`);
+                            gameEmbed.title = `${result} beats ${choice}, You lost ${winAmount}.`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'paper') {
                             winAmount += betAmount;
-                            interaction.reply(`${choice} beats ${result}, You win ${winAmount} Alcoins!`);
+                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;
                 }
@@ -81,7 +101,7 @@ module.exports = {
                       [winAmount, userId]);
                 }
         
-                return util.logger.log(`Payed out ${winAmount} for ${interaction.user.username}`);
+                return;
             }
         });
     }

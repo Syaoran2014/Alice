@@ -118,15 +118,15 @@ module.exports = {
                         playerScore = gameState.calculateScore(hand);
                         // util.logger.log(`${JSON.stringify(hand)} - Score: ${playerScore}`)
                         if (playerScore > 21) {
-                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... ${gameState.betAmount[currentIndex]}`;
+                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... -${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
                             payout = payout - gameState.betAmount[currentIndex];
                         } else if ((playerScore > dealerScore && playerScore < 22) || (dealerScore > 21)) {
-                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} WINS! ${gameState.betAmount[currentIndex]}`;
+                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} WINS! +${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
                             payout = payout + gameState.betAmount[currentIndex];
                         } else if ( playerScore < dealerScore || playerScore > 21) {
-                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... ${gameState.betAmount[currentIndex]}`;
+                            playingEmbed.fields[currentIndex].name = `Hand ${currentIndex + 1} loses... -${gameState.betAmount[currentIndex]}`;
                             playingEmbed.fields[currentIndex].value = `Total: ${playerScore} \n${gameState.formatHand(hand)}`;
                             payout = payout - gameState.betAmount[currentIndex];
                         } else {
@@ -137,10 +137,13 @@ module.exports = {
                     });
                     handlePayout(userId, userCurrency, payout, util); 
                     userGames.delete(interaction.user.id);
-                    return await interaction.editReply({ embeds: [playingEmbed], components: [] });
+                    return await interaction.editReply({ content: "Game Over", embeds: [playingEmbed], components: [] });
                 }
             });
         });
+    },
+    callback: async function (msg, args, util){
+        
     }
 };
 
