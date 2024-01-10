@@ -42,13 +42,13 @@ util.dataHandler = new DataHandler(util);
 util.schedule = new ScheduleHandler(util);
 util.BotClass = new CardinalBot(util);
 
-// const handleTermination = () => {
-//   util.logger.log('\nBot is shutting down...');
-//   util.commandHandler.deleteAllCommands();
-//   util.bot.destroy();
-//   process.exit();
-// };
-// process.on('SIGINT', handleTermination);
+const handleTermination = () => {
+  util.logger.log('\nBot is shutting down...');
+  util.commandHandler.deleteAllCommands();
+  util.bot.destroy();
+  // process.exit();
+};
+process.on('SIGINT', handleTermination);
 
 
 // This doesn't work in d.js V14 OR I've implemented it wrong

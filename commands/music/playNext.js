@@ -44,6 +44,7 @@ module.exports = {
 
         if (!queue || !queue.isPlaying()){
             //If queue doesn't exist, go ahead and play instead of queue....
+            userSearchStatus.delete(interaction.user.id);
             return interaction.followUp(`Nothing is currently in queue, Please use /play instead!\n This feature will be added later! ☆～（ゝ。∂）`);
         }
         const noResultsEmbed = {
@@ -66,11 +67,13 @@ module.exports = {
             });
 
             if(!res || !res.tracks.length) {
-                return interaction.followUp({ embeds: [noResultsEmbed]});
+            userSearchStatus.delete(interaction.user.id);
+            return interaction.followUp({ embeds: [noResultsEmbed]});
             }
 
             if (res.playlist) {
-                return interaction.followUp({ content: `This command does not support playlists!\n Please try again with a single song!`, ephemeral: true});
+            userSearchStatus.delete(interaction.user.id);
+            return interaction.followUp({ content: `This command does not support playlists!\n Please try again with a single song!`, ephemeral: true});
             }
             
             const queue = await player.nodes.create(interaction.guild, {
@@ -109,6 +112,7 @@ module.exports = {
             });
 
             if(!res || !res.tracks.length) {
+                userSearchStatus.delete(interaction.user.id);
                 return interaction.followUp({ embeds: [noResultsEmbed]});
             }
 
@@ -125,7 +129,8 @@ module.exports = {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
-    
+                userSearchStatus.delete(interaction.user.id);
+ 
                 return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 

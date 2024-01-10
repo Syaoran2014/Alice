@@ -11,7 +11,7 @@ module.exports = {
         .setRequired(true))
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     execute: async function (interaction, util) {
-        const commandName = interaction.options.getString('command', true).toLowerCase();
+        const commandName = interaction.options.getString('command', true);
         const command = interaction.client.commands.get(commandName);
         if (!command) {
             return interaction.reply(`No command with that name exists... \`${commandName}\``);
