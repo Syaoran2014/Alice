@@ -21,6 +21,24 @@ class CardinalBot {
       c.user.setActivity(`with your heart! ❤`, { type: ActivityType.Playing });
     });
 
+
+    this.client.on(this.util.lib.Events.guildCreate, async (guild) => {
+      this.util.dataHandler.getDatabase()
+        .run(
+          "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DisabledCmds) VALUES(?, ?, ?, ?, ?);",
+          [guild.id, null, null, null, "[]"],
+          (err) => {
+            util.logger.log(
+              `Set guild data for: ${guild.name} (${guild.id}) members: ${guild.memberCount}`
+            );
+            if (err) {
+              util.logger.error(err.message);
+              return;
+            }
+          }
+        );
+    })
+
     //Initialize both Command Handlers.
     //Generate Exp and Economy before command, Initialize if not exists. 
     this.client.on(this.util.lib.Events.MessageCreate, async (message) => {
