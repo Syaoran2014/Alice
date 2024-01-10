@@ -3,11 +3,13 @@ class CommandHandler {
     this.util = util;
     this.commands = [];
     this.sCommands = [];
-    this.registerCommands();
+    this.util.bot.once('ready', () => {
+      this.registerCommands();
+    })
   }
 
   //Loops through, adds and registers commands with Discord API.
-  registerCommands() {
+  async registerCommands() {
     this.util.logger.log("Registering Commands.");
     this.util.bot.commands = new this.util.lib.Collection();
     const folderPath = this.util.path.join(__dirname, "../commands");
@@ -37,27 +39,29 @@ class CommandHandler {
     }
     const rest = new this.util.lib.REST().setToken(this.util.config.token);
 
-    (async () => {
+    const guilds = this.util.bot.guilds.cache.values();
+    for (const guild of guilds) {
       try {
         this.util.logger.log(
-          `Started refreshing ${this.sCommands.length} application (/) commands.`
+          `Started refreshing ${this.sCommands.length} application (/) commands in ${guild.name}`
         );
+        
 
-        const data = await rest.put(
+       const data = await rest.put(
           this.util.lib.Routes.applicationGuildCommands(
             this.util.config.clientId,
-            this.util.config.guildId
+            guild.id
           ),
           { body: this.sCommands }
         );
 
         this.util.logger.log(
-          `Successfully reloaded ${data.length} application (/) commands.`
+          `Successfully reloaded ${data.length} application (/) commands in ${guild.name}`
         );
       } catch (error) {
-        this.util.logger.error(error);
+      this.util.logger.error(error);
       }
-    })();
+    };
   }
 
   //Handles Application commands, and calls execute in a command.
@@ -133,11 +137,19 @@ class CommandHandler {
 
   deleteAllCommands() {
       try {
+
         const rest = new this.util.lib.REST().setToken(this.util.config.token);
         this.util.logger.log(`Deleting all application commands. `);
         
-        rest.put(this.util.lib.Routes.applicationGuildCommands(this.util.config.clientId, this.util.config.guildId), { body: [] })
-          .then(() => this.util.logger.log(`Successfully deleted all application commands`));
+        const guilds = this.util.bot.guilds.cache.values();
+        
+        for(const guild of guilds) {
+          rest.put(this.util.lib.Routes.applicationGuildCommands(this.util.config.clientId, guild.id), { body: [] })
+            .then(() => this.util.logger.log(`Successfully deleted all application in ${guild.name}`));
+        }
+
+        // rest.put(this.util.lib.Routes.applicationGuildCommands(this.util.config.clientId, this.util.config.guildId), { body: [] })
+        //   .then(() => this.util.logger.log(`Successfully deleted all application commands`));
       } catch (error){
         this.util.logger.error(error);
       }

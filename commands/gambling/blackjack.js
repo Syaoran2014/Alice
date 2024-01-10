@@ -17,8 +17,9 @@ module.exports = {
         const userId = interaction.user.id;
 
         if (betAmount < 0) {
-            return interaction.reply(`Nice Try, You can't bet negative numbers`)
+            return interaction.reply("Nice Try, You can't bet negative numbers");
         }
+        betAmount = Math.floor(betAmount);
         util.dataHandler.getUserInfo(userId, async (err, userInfo) => {
             if (err){
                 return interaction.reply("An Error has occured, please try again later.");

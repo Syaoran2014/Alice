@@ -33,8 +33,11 @@
     - [] Slots
     - [✓] higher lower
     - [✓] Rock paper Scissors
+    - [✓] Make Art for my stuff!
+      - [✓] Rps
+      - [✓] cointoss
   - [] Currency manipulation command
-  - [] Update leaderboard for currency
+  - [✓] Update leaderboard for currency
 - [] Update Profile command for Image manipulation, Create Better looking profiles
 - [] Determine in my current Database structure supports this.....
   - [] Port over to AWS Database? 
