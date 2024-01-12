@@ -22,21 +22,22 @@ class CardinalBot {
     });
 
 
-    this.client.on(this.util.lib.Events.guildCreate, async (guild) => {
+    this.client.on(this.util.lib.Events.GuildCreate, async (guild) => {
       this.util.dataHandler.getDatabase()
         .run(
           "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DisabledCmds) VALUES(?, ?, ?, ?, ?);",
           [guild.id, null, null, null, "[]"],
           (err) => {
-            util.logger.log(
+            this.util.logger.log(
               `Set guild data for: ${guild.name} (${guild.id}) members: ${guild.memberCount}`
             );
             if (err) {
-              util.logger.error(err.message);
+              this.util.logger.error(err.message);
               return;
             }
           }
         );
+      this.util.commandHandler.serverRegistration(guild);
     })
 
     //Initialize both Command Handlers.
