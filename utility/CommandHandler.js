@@ -64,6 +64,24 @@ class CommandHandler {
     };
   }
 
+  async serverRegistration(guild) {
+    this.util.logger.log(`New Server ${guild.name} joined, Registering Commands!`);
+
+    const rest = new this.util.lib.REST().setToken(this.util.config.token);
+
+    try {
+      const data = await rest.put(
+        this.util.lib.Routes.applicationGuildCommands(
+          this.util.config.clientId, guild.id),
+          { body: this.sCommands }
+        );
+      
+        this.util.logger.log(`Successfully reloaded ${data.length} application commands in ${guild.name}`);
+    } catch (error) {
+      this.util.logger.error(error);
+    }
+  }
+
   //Handles Application commands, and calls execute in a command.
   async handleInteraction(interaction) {
     if (!interaction.isChatInputCommand()) return;
