@@ -100,6 +100,7 @@ class CardinalBot {
             await channel.messages.fetch(messageId);
           } catch (error) {
             this.util.logger.error(`Error fetching ${messageId}\n ${error.message}`);
+            
           }
         }
       }
@@ -110,6 +111,8 @@ class CardinalBot {
     const configFile = path.join(__dirname, '../data/roleMenuConfig.json');
     client.on(util.lib.Events.MessageReactionAdd, async (reaction, user) => {
       const config = this.loadConfig(configFile);
+
+      if(!config) return;
 
       const guildId = reaction.message.guildId;
       const channelId = reaction.message.channelId; 
@@ -142,6 +145,7 @@ class CardinalBot {
     client.on(util.lib.Events.MessageReactionRemove, async (reaction, user) => {
       //Do Stuff.
       const config = this.loadConfig(configFile);
+      if (!config) return;
 
       const guildId = reaction.message.guildId;
       const channelId = reaction.message.channelId; 
