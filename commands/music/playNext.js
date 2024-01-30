@@ -89,7 +89,7 @@ module.exports = {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
-    
+                userSearchStatus.delete(interaction.user.id); 
                 return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 
@@ -129,8 +129,7 @@ module.exports = {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
-                userSearchStatus.delete(interaction.user.id);
- 
+                userSearchStatus.delete(interaction.user.id); 
                 return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 
@@ -168,9 +167,9 @@ module.exports = {
                 const userChoice = Number(collected.first().content);
                 const selectedTrack = firstFiveTracks[userChoice - 1];
 
+                userSearchStatus.delete(interaction.user.id);
                 if (userChoice != 'x') {
                     queue.insertTrack(res.tracks[userChoice], 0);
-                    userSearchStatus.delete(interaction.user.id);
                 
                     const selectedEmbed = {
                         title: `Track was successfully added to the front of the queue... ✅`,

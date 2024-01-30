@@ -1,15 +1,13 @@
 const { ActivityType } = require("discord.js");
+const fs = require("fs"); 
+const path = require("path");
 
 class CardinalBot {
   constructor(util) {
-    /*
-            initialize discord bot here
-            */
     this.util = util;
     this.client = this.util.bot;
     const expService = this.util.services.get('ExpService');
     const economyService = this.util.services.get('EconomyService');
-
 
     // Log in to Discord with client's token.
     this.client.login(util.config.token);
@@ -19,8 +17,14 @@ class CardinalBot {
     this.client.once(util.lib.Events.ClientReady, (c) => {
       this.util.logger.log(`Ready! Logged in as ${c.user.tag}`);
       c.user.setActivity(`with your heart! ❤`, { type: ActivityType.Playing });
-    });
 
+      var config = this.loadConfig(path.join(__dirname, '../data/roleMenuConfig.json'));
+      
+      this.fetchRoleMenuMessages(c, config);
+      this.setupReactionListeners(c, util);
+
+
+    });
 
     this.client.on(this.util.lib.Events.GuildCreate, async (guild) => {
       this.util.dataHandler.getDatabase()
@@ -38,7 +42,7 @@ class CardinalBot {
           }
         );
       this.util.commandHandler.serverRegistration(guild);
-    })
+    });
 
     //Initialize both Command Handlers.
     //Generate Exp and Economy before command, Initialize if not exists. 
@@ -83,6 +87,99 @@ class CardinalBot {
       });
     });
   }
+
+
+  //How I am managing the Role Menu stuff.
+  async fetchRoleMenuMessages(client, config) {
+    for (const guildId in config) {
+      const guild = await client.guilds.fetch(guildId);
+      for (const channelId in config[guildId]){
+        const channel = await guild.channels.fetch(channelId);
+        for (const messageId of Object.keys(config[guildId][channelId])) {
+          try {
+            await channel.messages.fetch(messageId);
+          } catch (error) {
+            this.util.logger.error(`Error fetching ${messageId}\n ${error.message}`);
+          }
+        }
+      }
+    }
+  }
+
+  async setupReactionListeners(client, util) {
+    const configFile = path.join(__dirname, '../data/roleMenuConfig.json');
+    client.on(util.lib.Events.MessageReactionAdd, async (reaction, user) => {
+      const config = this.loadConfig(configFile);
+
+      const guildId = reaction.message.guildId;
+      const channelId = reaction.message.channelId; 
+      const messageId = reaction.message.id;
+      const emoji = reaction.emoji.toString();
+
+      const guild = client.guilds.cache.get(guildId);
+      if (!guild) return;
+      
+      if (config[guildId] && config[guildId][channelId] && config[guildId][channelId][messageId]) {
+        const roleMenu = config[guildId][channelId][messageId];
+      
+        if (roleMenu[emoji]) {
+          const roleId = roleMenu[emoji][0]; 
+          try{
+            const member = await guild.members.fetch(user.id);
+            const role = guild.roles.cache.get(roleId);
+
+            // Check if role exists and is assignable
+            if (role && !member.roles.cache.has(roleId)) {
+              await member.roles.add(role); 
+            }
+          } catch (error) {
+            util.logger.error(error.message);
+          }
+        }
+      }
+    });
+
+    client.on(util.lib.Events.MessageReactionRemove, async (reaction, user) => {
+      //Do Stuff.
+      const config = this.loadConfig(configFile);
+
+      const guildId = reaction.message.guildId;
+      const channelId = reaction.message.channelId; 
+      const messageId = reaction.message.id;
+      const emoji = reaction.emoji.toString();
+
+      const guild = client.guilds.cache.get(guildId);
+      if (!guild) return;
+      
+      if (config[guildId] && config[guildId][channelId] && config[guildId][channelId][messageId]) {
+        const roleMenu = config[guildId][channelId][messageId];
+      
+        if (roleMenu[emoji]) {
+          const roleId = roleMenu[emoji][0]; 
+          try{
+            const member = await guild.members.fetch(user.id);
+            const role = guild.roles.cache.get(roleId);
+
+            // Check if role exists and is assignable
+            if (role && member.roles.cache.has(roleId)) {
+              await member.roles.remove(role); 
+            }
+          } catch (error) {
+            util.logger.error(error.message);
+          }
+        }
+      }
+    });
+  }
+
+  loadConfig(configFile){
+    if (fs.existsSync(configFile)){
+      const fileContent = fs.readFileSync(configFile, 'utf-8');
+      var existingConfig = fileContent ? JSON.parse(fileContent) : {};
+    }
+    return existingConfig;
+  }
+
 }
 
 module.exports = CardinalBot;

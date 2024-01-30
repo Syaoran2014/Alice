@@ -46,6 +46,7 @@ module.exports = {
         await interaction.deferReply();
 
         if(!channel) {
+            userSearchStatus.delete(interaction.user.id);
             return interaction.followUp({content: "You are not connected to a voice channel!"});
         }
 
@@ -69,6 +70,7 @@ module.exports = {
             });
 
             if(!res || !res.tracks.length) {
+                userSearchStatus.delete(interaction.user.id);
                 return interaction.followUp({ embeds: [noResultsEmbed]});
             }
             
@@ -85,7 +87,7 @@ module.exports = {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
                 await player.deleteQueue(interaction.guildId);
-    
+                userSearchStatus.delete(interaction.user.id);
                 return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
         
@@ -110,6 +112,7 @@ module.exports = {
             });
 
             if(!res || !res.tracks.length) {
+                userSearchStatus.delete(interaction.user.id);
                 return interaction.followUp({ embeds: [noResultsEmbed]});
             }
 
@@ -125,8 +128,8 @@ module.exports = {
             try {
                 if(!queue.connection) await queue.connect(channel);
             } catch {
-                await player.deleteQueue(interaction.guildId);
-    
+                await player.deleteQueue(interaction.guildId); 
+                userSearchStatus.delete(interaction.user.id);
                 return interaction.followUp({ embeds: [noVoiceEmbed]});
             }
 

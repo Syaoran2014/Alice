@@ -37,8 +37,8 @@ class DataHandler {
           util.dataHandler
             .getDatabase()
             .run(
-              "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DisabledCmds) VALUES(?, ?, ?, ?, ?);",
-              [guild.id, log_enabled, log_channel, muted_role, "[]"],
+              "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DjRole, DisabledCmds, AutoRoleEnabled, AutoRole) VALUES(?, ?, ?, ?, ?, ?, ?, ?);",
+              [guild.id, log_enabled, log_channel, muted_role, null, "[]", null, null],
               (err) => {
                 util.logger.log(
                   `Set guild data for: ${guild.name} (${guild.id}) members: ${guild.memberCount}`
@@ -61,7 +61,7 @@ class DataHandler {
     this.db = new sqlite.Database(__dirname + "/../data/Cardinal.db");
     this.db
       .run(
-        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18),  DjRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL);"
+        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18),  DjRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL, AutoRoleEnabled BOOLEAN, AutoRole VARCHAR(18));"
       )
       .on("error", (err) => {
         util.logger.error(
@@ -92,6 +92,8 @@ class DataHandler {
       "MutedRole VARCHAR(18)",
       "DjRole VARCHAR(18)",
       "DisabledCmds MEDIUMBLOB NOT NULL",
+      "AutoRoleEnabled BOOLEAN", 
+      "AutoRole VARCHAR(18)",
     ];
     this.db.all("PRAGMA table_info(ServerConfig);", (err, rows) => {
       if (err) {
@@ -188,6 +190,8 @@ class DataHandler {
             MutedRole: row.MutedRole,
             DjRole: row.DjRole,
             DisabledCmds: JSON.parse(row.DisabledCmds),
+            AutoRoleEnabled: row.AutoRoleEnabled,
+            AutoRole: row.AutoRole
           };
         });
         callback(err, res);
