@@ -19,8 +19,7 @@ module.exports = {
                     option
                         .setName("channel")
                         .setDescription("The Channel to set logging (required for 'set' option)")
-                        .setRequired(false)
-                    )
+                        .setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     execute: async function (interaction, util) {
         const cOption = interaction.options.getString('options');
