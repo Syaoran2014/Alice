@@ -51,13 +51,22 @@ module.exports = {
             let playerScore = gameState.calculateScore(currentHand);
             let dealerScore = gameState.calculateScore(gameState.dealerHand);
 
-            if (playerScore === 21 && currentHand.length === 2) {
+            if (playerScore === 21 && currentHand.length === 2 && dealerScore != 21) {
                 gameState.gameEnded = true; 
                 userGames.delete(interaction.user.id);
                 betAmount = betAmount * 1.5;
                 handlePayout(userId, userCurrency, betAmount, util);
                 return await interaction.reply({content : `***Blackjack! You WIN! *** +${betAmount}`, embeds: [playingEmbed]});
-            } else if (dealerScore === 21 && currentHand.length === 2) {
+            }
+            else if(dealerScore === 21 && currentHand.length === 2 && dealerScore === 21){
+                gameState.gameEnded = true;
+                userGames.delete(interaction.user.id);
+                playingEmbed.description = `Dealer's Hand: \nTotal: ${dealerScore} \n${gameState.formatHand(gameState.dealerHand)}`;
+                betAmount = 0;
+                handlePayout(userId, userCurrency, betAmount, util);
+                return await interaction.reply({content : `You both have Blackjack! Push!`, embeds: [playingEmbed]});
+            }
+            else if (dealerScore === 21 && currentHand.length === 2) {
                 gameState.gameEnded = true; 
                 userGames.delete(interaction.user.id);
                 playingEmbed.description = `Dealer's Hand: \nTotal: ${dealerScore} \n${gameState.formatHand(gameState.dealerHand)}`;
@@ -248,6 +257,10 @@ async function handleSplit(gameState, interaction) {
     }
 }
 
+async function insurance(gameState, interaction){
+
+}
+
 async function handlePayout(user, currency, payout, util) {
     var updatedCurrency = currency + payout;
     util.dataHandler.getDatabase().run(
@@ -263,6 +276,7 @@ class BlackjackGameState {
         this.userCurrency = userCurrency;
         this.playerHands = [this.dealHand()];
         this.dealerHand = this.dealHand();
+        this.dHandIndex = 0;
         this.handIndex = 0;
         this.gameEnded = false;
         this.gameId = user;
