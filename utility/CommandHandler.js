@@ -5,7 +5,7 @@ class CommandHandler {
     this.sCommands = [];
     this.util.bot.once('ready', () => {
       this.registerCommands();
-    })
+    });
   }
 
   //Loops through, adds and registers commands with Discord API.
@@ -61,7 +61,7 @@ class CommandHandler {
       } catch (error) {
       this.util.logger.error(error);
       }
-    };
+    }
   }
 
   async serverRegistration(guild) {
