@@ -229,6 +229,54 @@ class LoggingService {
 
             loggingChannel.send({ embeds: [embed] });
         });
+
+        this.util.bot.on(this.util.lib.Events.GuildEmojiCreate, async (guildEmoji) => {
+            const guildInfo = await this.getGuildConfig(guildEmoji.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+            
+            const embed = {
+                color: parseInt("7FEB7F", 16),
+                title: `Server Emoji's updated`,
+                description: `Emoji Added! ${guildEmoji} ${guildEmoji.name}`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
+
+
+        this.util.bot.on(this.util.lib.Events.GuildEmojiDelete, async (guildEmoji) => {
+            const guildInfo = await this.getGuildConfig(guildEmoji.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+
+            const embed = {
+                color: parseInt("ff3232", 16),
+                title: `Server Emoji's updated`,
+                description: `Emoji Deleted: ${guildEmoji.name}`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
+        this.util.bot.on(this.util.lib.Events.GuildEmojiUpdate, async (oldEmoji, newEmoji) => {
+            const guildInfo = await this.getGuildConfig(newEmoji.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+
+            const embed = {
+                color: parseInt("f0ccc0", 16),
+                title: `Server Emoji's updated`,
+                description: `Emoji updated: ${newEmoji} ${oldEmoji.name} -> ${newEmoji.name}`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
     }
 
     async getGuildConfig(guildId){
