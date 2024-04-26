@@ -18,6 +18,24 @@ Requirements: Create a `config.json` file in the same directory as `index.js`.
 }
 ```
 
+## What can Alice Currently Do?
+Currently Alice has the following features!
+  - Server Logging! 
+    - Message Deletes/Edits, Server Memeber Join/Leave/role updates, Server Emoji add/delete/update, Voice join/leave
+  - Experience and Currency 
+    - Currency for gambling, Experience for member activity tracking.
+    - Leaderboards (Global)
+  - Gambling Games 
+    - Betroll, blackjack, coinToss, highlow, rps
+  - Music! 
+    - Able to play music in one channel per server! Allows music from places like Spotify, Youtube, Apple Music, etc (Default Spotify)
+  - Server Autorole on Join
+  - Role Menu 
+  - Moderation Commands 
+    - Kick/Ban/Mute(Timeout)
+  - Say and Edit messages. Embeds allowed via JSON.
+
+## Notes
 Limitations: Currently, The database only tracks a global usage. I'm considering splitting so you can run per server tracking. Things that will need to be updated would be the dataHandler, commands like leaderboard, and the services like Exp and Currency.
 There are likely other limitations I haven't considered or realized.
 

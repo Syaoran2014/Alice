@@ -144,8 +144,6 @@ class LoggingService {
         });
 
         this.util.bot.on(this.util.lib.Events.GuildMemberUpdate, async (oldMember, newMember) => {
-            util.logger.log(oldMember);
-            util.logger.log(newMember);
             if(oldMember.user.bot || !oldMember.guild) return;
 
             const guildInfo = await this.getGuildConfig(oldMember.guild.id);
@@ -172,7 +170,6 @@ class LoggingService {
 
             //Checking Roles and Role related variables
             if(oldMember.roles != newMember.roles) { 
-                //util.logger.log(JSON.stringify(oldMember.roles));
                 const oldRoles = oldMember.roles.cache;
                 const newRoles = newMember.roles.cache;
 
@@ -230,6 +227,29 @@ class LoggingService {
             loggingChannel.send({ embeds: [embed] });
         });
 
+        this.util.bot.on(this.util.lib.Events.GuildMemberRemove, async (guildMember) => {
+            if(guildMember.user.bot || !guildMember.guild) return; 
+
+            const guildInfo = await this.getGuildConfig(guildMember.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+
+            const embed = {
+                color: parseInt("fe3232", 16), 
+                author: {
+                    name: guildMember.user.username,
+                    icon_url: guildMember.user.avatarURL(),
+                },
+                description: `${guildMember} has left the server.`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
+
+        //Add AuditLogCreate/Update events
+        
         this.util.bot.on(this.util.lib.Events.GuildEmojiCreate, async (guildEmoji) => {
             const guildInfo = await this.getGuildConfig(guildEmoji.guild.id);
             if(!guildInfo.LogEnabled) return; 
