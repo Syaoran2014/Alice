@@ -100,7 +100,6 @@ class CardinalBot {
             await channel.messages.fetch(messageId);
           } catch (error) {
             this.util.logger.error(`Error fetching ${messageId}\n ${error.message}`);
-            
           }
         }
       }
@@ -117,14 +116,15 @@ class CardinalBot {
       const guildId = reaction.message.guildId;
       const channelId = reaction.message.channelId; 
       const messageId = reaction.message.id;
-      const emoji = reaction.emoji.toString();
+      const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
 
       const guild = client.guilds.cache.get(guildId);
       if (!guild) return;
       
       if (config[guildId] && config[guildId][channelId] && config[guildId][channelId][messageId]) {
+
         const roleMenu = config[guildId][channelId][messageId];
-      
+        
         if (roleMenu[emoji]) {
           const roleId = roleMenu[emoji][0]; 
           try{
@@ -139,7 +139,7 @@ class CardinalBot {
             util.logger.error(error.message);
           }
         }
-      }
+      } 
     });
 
     client.on(util.lib.Events.MessageReactionRemove, async (reaction, user) => {
@@ -150,7 +150,7 @@ class CardinalBot {
       const guildId = reaction.message.guildId;
       const channelId = reaction.message.channelId; 
       const messageId = reaction.message.id;
-      const emoji = reaction.emoji.toString();
+      const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
 
       const guild = client.guilds.cache.get(guildId);
       if (!guild) return;

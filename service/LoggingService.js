@@ -1,3 +1,5 @@
+const { EmbedBuilder } = require("discord.js");
+
 class LoggingService {
     constructor(util) {
         this.util = util;
@@ -23,33 +25,6 @@ class LoggingService {
             };
 
             loggingChannel.send({ embeds: [embed] });
-
-            // this.util.dataHandler.getGuildConfig(message.guildId, (err, guildInfo) => {
-                //     if (err) {
-                    //         this.util.logger.error(err.message);
-                    //         return;
-                    //     }
-
-                //     if (!guildInfo.LogEnabled) {
-                    //         return;
-                    //     }
-
-                //     const loggingChannel = this.util.bot.channels.cache.get(
-                    //         guildInfo.LogChannel
-                    //     );
-
-                //     const embed = {
-                    //         color: parseInt("f0ccc0", 16),
-                    //         author: {
-                        //             name: message.author.username,
-                        //             icon_url: message.author.avatarURL(),
-                        //         },
-                    //         title: `Message Deleted in ${message.channel}`,
-                    //         description: `***Content:*** ${message.content}`,
-                    //     };
-
-                //     loggingChannel.send({ embeds: [embed] });
-                // });
         });
 
         this.util.bot.on(this.util.lib.Events.MessageUpdate, async (oldMessage, newMessage) => {
@@ -74,36 +49,6 @@ class LoggingService {
             };
 
             loggingChannel.send({ embeds: [embed] });
-
-            // this.util.dataHandler.getGuildConfig(
-                //     oldMessage.guildId,
-                //     (err, guildInfo) => {
-                    //         if (err) {
-                        //             this.util.logger.error(err.message);
-                        //             return;
-                        //         }
-
-                    //         if (!guildInfo.LogEnabled) {
-                        //             return;
-                        //         }
-
-                    //         const loggingChannel = this.util.bot.channels.cache.get(
-                        //             guildInfo.LogChannel
-                        //         );
-
-                    //         const embed = {
-                        //             color: parseInt("f0ccc0", 16),
-                        //             author: {
-                            //                 name: newMessage.author.username,
-                            //                 icon_url: newMessage.author.avatarURL(),
-                            //             },
-                        //             title: `Message edited in ${newMessage.channel}`,
-                        //             description: `***Old Message:*** ${oldMessage.content} \n ***New Message:*** ${newMessage.content}`,
-                        //         };
-
-                    //         loggingChannel.send({ embeds: [embed] });
-                    //     }
-                // );
         });
 
         this.util.bot.on(this.util.lib.Events.VoiceStateUpdate, async (oldState, newState) => {
@@ -297,6 +242,56 @@ class LoggingService {
 
             loggingChannel.send({ embeds: [embed] });
         });
+
+        this.util.bot.on(this.util.lib.Events.GuildAuditLogEntryCreate, async (auditLog, guild) => {
+            this.util.logger.log(JSON.stringify(auditLog));
+            const guildInfo = await this.getGuildConfig(guild.id);
+            if(!guildInfo.LogEnabled) return;
+
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+            
+            const embed = new EmbedBuilder()
+                .setTitle(`New Audit Log Entry Created`)
+                .setColor(0xf0ccc0)
+                .setTimestamp();
+
+            // Making a tUser (target user) variable so I can assign later on supported actions.
+            // If you attempt to assign on certain action, will crash the bot because targetId null.
+            // There's probably a better way to do this, but I wasn't sure how....
+            let tUser;
+
+            //Make a switch case to switch auditLog.action, Map what Id goes to which API, ie. action 72 = message delete 
+            switch(auditLog.action){
+                case 20:
+                    tUser = await this.util.bot.users.fetch(auditLog.targetId); 
+                    embed.setDescription(`User ${tUser} was kicked`);
+                    embed.setAuthor({ name: auditLog.executor.username, iconURL: auditLog.executor.avatarURL() });
+                    if(auditLog.reason){
+                        embed.addFields({ name: "With Reason", value: `${auditLog.reason}` });
+                    }
+                    loggingChannel.send({ embeds: [embed] });
+                    break;
+                case 22:
+                    tUser = await this.util.bot.users.fetch(auditLog.targetId); 
+                    embed.setDescription(`User ${tUser} was banned`);
+                    embed.setAuthor({ name: auditLog.executor.username, iconURL: auditLog.executor.avatarURL() });
+                    if(auditLog.reason){
+                        embed.addFields({ name: "With Reason", value: `${auditLog.reason}` });
+                    }
+                    loggingChannel.send({ embeds: [embed] });
+                    break;
+                case 72:
+                    tUser = await this.util.bot.users.fetch(auditLog.targetId); 
+                    embed.setDescription(`Mod Deleted ${tUser} message`);
+                    embed.setAuthor({ name: auditLog.executor.username, iconURL: auditLog.executor.avatarURL() });
+                    loggingChannel.send({ embeds: [embed] });
+                    break;
+                default:
+                    //Leaves anything I don't want unhandled
+                    break;
+            }
+        }); 
     }
 
     async getGuildConfig(guildId){

@@ -34,6 +34,7 @@ util.bot = new Discord.Client({
     Discord.GatewayIntentBits.GuildMessages,
     Discord.GatewayIntentBits.GuildMessageTyping,
     Discord.GatewayIntentBits.GuildMessageReactions,
+    Discord.GatewayIntentBits.GuildModeration,
     Discord.GatewayIntentBits.MessageContent,
     Discord.GatewayIntentBits.GuildVoiceStates
   ],
