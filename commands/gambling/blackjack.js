@@ -58,7 +58,7 @@ module.exports = {
                 handlePayout(userId, userCurrency, betAmount, util);
                 return await interaction.reply({content : `***Blackjack! You WIN! *** +${betAmount}`, embeds: [playingEmbed]});
             }
-            else if(dealerScore === 21 && currentHand.length === 2 && dealerScore === 21){
+            else if(playerScore === 21 && currentHand.length === 2 && dealerScore === 21){
                 gameState.gameEnded = true;
                 userGames.delete(interaction.user.id);
                 playingEmbed.description = `Dealer's Hand: \nTotal: ${dealerScore} \n${gameState.formatHand(gameState.dealerHand)}`;

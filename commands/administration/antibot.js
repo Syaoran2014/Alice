@@ -30,10 +30,12 @@ module.exports = {
                 case "enable": 
                     util.dataHandler.getDatabase().run("UPDATE ServerConfig SET Antibot = ? WHERE GuildId = ?",
                         [1, interaction.guildId]);
+                    util.BotClass.clearGuildCache(interaction.guildId); 
                     return interaction.reply(`Antibot has been enabled for ${interaction.guild}`);
                 case "disable":
                     util.dataHandler.getDatabase().run("UPDATE ServerConfig SET Antibot = ? WHERE GuildId = ?",
                         [0, interaction.guildId]);
+                    util.BotClass.clearGuildCache(interaction.guildId); 
                     return interaction.reply(`Antibot has been disabled for ${interaction.guild}`);
                 default:
                     return interaction.reply("You did something unsupported of this command");

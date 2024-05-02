@@ -221,6 +221,13 @@
                 }); 
             });
         }
+
+        clearGuildCache(guildId){
+            if(this.cache[guildId]){
+                delete this.cache[guildId];
+                this.util.logger.log(`${guildId} removed from cache`);
+            }
+        }
     }
 
     module.exports = CardinalBot;
