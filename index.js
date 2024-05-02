@@ -29,10 +29,12 @@ util.lib = Discord;
 util.bot = new Discord.Client({
   intents: [
     Discord.GatewayIntentBits.Guilds,
+    Discord.GatewayIntentBits.GuildEmojisAndStickers,
     Discord.GatewayIntentBits.GuildMembers,
     Discord.GatewayIntentBits.GuildMessages,
     Discord.GatewayIntentBits.GuildMessageTyping,
     Discord.GatewayIntentBits.GuildMessageReactions,
+    Discord.GatewayIntentBits.GuildModeration,
     Discord.GatewayIntentBits.MessageContent,
     Discord.GatewayIntentBits.GuildVoiceStates
   ],

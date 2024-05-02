@@ -37,8 +37,8 @@ class DataHandler {
           util.dataHandler
             .getDatabase()
             .run(
-              "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DjRole, DisabledCmds, AutoRoleEnabled, AutoRole) VALUES(?, ?, ?, ?, ?, ?, ?, ?);",
-              [guild.id, log_enabled, log_channel, muted_role, null, "[]", null, null],
+              "INSERT INTO ServerConfig (GuildId, LogEnabled, LogChannel, MutedRole, DjRole, DisabledCmds, AutoRoleEnabled, AutoRole, Antibot) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);",
+              [guild.id, log_enabled, log_channel, muted_role, null, "[]", null, null, null],
               (err) => {
                 util.logger.log(
                   `Set guild data for: ${guild.name} (${guild.id}) members: ${guild.memberCount}`
@@ -61,7 +61,7 @@ class DataHandler {
     this.db = new sqlite.Database(__dirname + "/../data/Cardinal.db");
     this.db
       .run(
-        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18),  DjRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL, AutoRoleEnabled BOOLEAN, AutoRole VARCHAR(18));"
+        "CREATE TABLE IF NOT EXISTS ServerConfig (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, GuildId VARCHAR(18) NOT NULL, LogEnabled BOOLEAN, LogChannel VARCHAR(18), MutedRole VARCHAR(18),  DjRole VARCHAR(18), DisabledCmds MEDIUMBLOB NOT NULL, AutoRoleEnabled BOOLEAN, AutoRole VARCHAR(18), Antibot BOOLEAN);"
       )
       .on("error", (err) => {
         util.logger.error(
@@ -94,6 +94,7 @@ class DataHandler {
       "DisabledCmds MEDIUMBLOB NOT NULL",
       "AutoRoleEnabled BOOLEAN", 
       "AutoRole VARCHAR(18)",
+      "Antibot BOOLEAN",
     ];
     this.db.all("PRAGMA table_info(ServerConfig);", (err, rows) => {
       if (err) {
@@ -109,7 +110,7 @@ class DataHandler {
 
       if (missingColumns.length > 0) {
         missingColumns.forEach((column) => {
-          const updateSQL = `ALTER TABLE DiscordUserData ADD COLUMN ${column};`;
+          const updateSQL = `ALTER TABLE ServerConfig ADD COLUMN ${column};`;
           this.db.run(updateSQL, (updateErr) => {
             if (updateErr) {
               this.util.logger.error("Error occurred while updating table schema: " + updateErr.message);
@@ -191,7 +192,8 @@ class DataHandler {
             DjRole: row.DjRole,
             DisabledCmds: JSON.parse(row.DisabledCmds),
             AutoRoleEnabled: row.AutoRoleEnabled,
-            AutoRole: row.AutoRole
+            AutoRole: row.AutoRole, 
+            Antibot: row.Antibot
           };
         });
         callback(err, res);
@@ -327,7 +329,7 @@ class DataHandler {
         }
         callback(err, rows);
       }
-    )
+    );
   }
 
   executeSQL(sql) {

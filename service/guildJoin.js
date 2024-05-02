@@ -20,14 +20,13 @@ class guildJoin {
                     await member.roles.add(autoRole);
                 } catch (error) {
                     if(guildInfo.LogChannel){
-                        const logChannel = util.bot.channels.cache.get(guildInfo.LogChannel)
-                        logChannel.send({ content: `Error assigning autorole to ${member.user.username} with this error:\n${error.message}.`})
+                        const logChannel = util.bot.channels.cache.get(guildInfo.LogChannel);
+                        logChannel.send({ content: `Error assigning autorole to ${member.user.username} with this error:\n${error.message}.`});
                     }
                     util.logger.error(error.message); 
                 }
-            })
-        })
-
+            });
+        });
     }
 }
 

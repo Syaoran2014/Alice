@@ -64,8 +64,8 @@ module.exports = {
                         [role.id, interaction.guildId]);
                         return interaction.reply({ content: `AutoRole has been set to ${role}`});
                     default: 
-                        return interaction.reply({ content: "You did something unexpected, please try again with proper options."})
+                        return interaction.reply({ content: "You did something unexpected, please try again with proper options."});
                 }
             });
         }
-}
+};

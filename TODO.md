@@ -1,47 +1,17 @@
 # TODO:
 
-- [✓] Logging Enable Disable
-- [✓] Update CommandHandler - Put the Commands in subfolders for organization
-  - [✓] Update Help command to account for this.
-  - [✓] Make commands first letter capitalized  
-- [✓] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc) 
-  - [✓] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
-- [✓] Voice Chat integration
-  - [✓] Music Player
-  - [✓] BUG: Figure out Connection Reset Issue
-  - [✓] Make play searchable with terms if link not provided.
-    - [✓] Pulls list, assumes its the first one
-  - [✓] Make Skip restrict to Dj role, admin, or Channel Majority
-    - [✓] Add djRole column in ServerConfig 
-  - [✓] Add shuffle, playNext, nowPlaying
-  - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
-  - [✓] Update queue to cycle and show more. 
+- [] FIX YOUR FUCKING DATAHANDLER
+- [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
 - [] Malort
-- [✓] Economy / Alcoins? Malorkles?
-  - [✓] New Table for RPG Items?
-    - [✓] tableName UserEconomy
-    - [✓] UserID, Currency, inventory
-      - [✓] Inventory needs blob - houses json
-       - [✓] ie { "fish": 1, "meat": 1}
-  - [✓] Chat messages generate
-  - [✓] Update services to generate Correctly
-  - [] Hunt/Fish
-  - [✓] Gambling
-    - [✓] Blackjack
-    - [✓] CoinToss
-    - [✓] D100 BetRoll 
-    - [] Slots
-    - [✓] higher lower
-    - [✓] Rock paper Scissors
-    - [✓] Make Art for my stuff!
-      - [✓] Rps
-      - [✓] cointoss
-  - [] Currency manipulation command
-  - [✓] Update leaderboard for currency
+- [] Hunt/Fish (Daily/Timely activity)
+- [] Slots (Gambling)
+- [] Currency manipulation command
 - [] Update Profile command for Image manipulation, Create Better looking profiles
-- [] Determine in my current Database structure supports this.....
+- [] Determine if my current Database structure supports this.....
   - [] Port over to AWS Database? 
   - [] Port to Better Database Service?
+
+Large Scale Idea:
 - [] Adventure RPG
   - [] Create Character (Rpg start)
     - [] Simple classes (tank, healer, fighter, mage) 
@@ -80,6 +50,7 @@
   - [] Andorid
 
 How to Monetize: 
+Discord has activity SDK's now, look into that....
 - [] Subscription Service
   - [] Double/Multiplied Xp Rate
     - [] Applies to Waifus as well?
@@ -105,6 +76,8 @@ Other Items:
   - [] Chatbot
   - [] Commands
   - [] XP per chat Activity
+
+Unrelated:
 - [] fork of video2x and create a button to turn off my pc when the conversion is done
   - [] https://github.com/k4yt3x/video2x
 
@@ -125,6 +98,36 @@ Completed:
     - [✓] Logging Channel ID
     - [✓] Service Enable/Disable (For Future Services)
 - [✓] Add Profile command
-
-
-
+- [✓] Logging Enable Disable
+- [✓] Update CommandHandler - Put the Commands in subfolders for organization
+  - [✓] Update Help command to account for this.
+  - [✓] Make commands first letter capitalized  
+- [✓] Update DiscordUserInfo Table - Update columns to better suit what I want.. (remove dup columns, add others, etc) 
+  - [✓] UserID, UserName, Birthday, ChatLvl, ChatExp, LevelExp
+- [✓] Voice Chat integration
+  - [✓] Music Player
+  - [✓] BUG: Figure out Connection Reset Issue
+  - [✓] Make play searchable with terms if link not provided.
+    - [✓] Pulls list, assumes its the first one
+  - [✓] Make Skip restrict to Dj role, admin, or Channel Majority
+    - [✓] Add djRole column in ServerConfig 
+  - [✓] Add shuffle, playNext, nowPlaying
+  - [✓] Update queue to cycle and show more. 
+- [✓] Economy / Alcoins? Malorkles?
+  - [✓] New Table for RPG Items?
+    - [✓] tableName UserEconomy
+    - [✓] UserID, Currency, inventory
+      - [✓] Inventory needs blob - houses json
+       - [✓] ie { "fish": 1, "meat": 1}
+  - [✓] Chat messages generate
+  - [✓] Update services to generate Correctly
+  - [✓] Gambling
+    - [✓] Blackjack
+    - [✓] CoinToss
+    - [✓] D100 BetRoll 
+    - [✓] higher lower
+    - [✓] Rock paper Scissors
+    - [✓] Make Art for my stuff!
+      - [✓] Rps
+      - [✓] cointoss
+  - [✓] Update leaderboard for currency
