@@ -244,7 +244,6 @@ class LoggingService {
         });
 
         this.util.bot.on(this.util.lib.Events.GuildAuditLogEntryCreate, async (auditLog, guild) => {
-            this.util.logger.log(JSON.stringify(auditLog));
             const guildInfo = await this.getGuildConfig(guild.id);
             if(!guildInfo.LogEnabled) return;
 

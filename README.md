@@ -21,7 +21,7 @@ Requirements: Create a `config.json` file in the same directory as `index.js`.
 ## What can Alice Currently Do?
 Currently Alice has the following features!
   - Server Logging! 
-    - Message Deletes/Edits, Server Memeber Join/Leave/role updates, Server Emoji add/delete/update, Voice join/leave
+    - Message Deletes/Edits, Server Memeber Join/Leave/role updates, Server Emoji add/delete/update, Voice join/leave, AuditLog Create Events (Kick, Ban, Mod message delete)
   - Experience and Currency 
     - Currency for gambling, Experience for member activity tracking.
     - Leaderboards (Global)
@@ -34,13 +34,15 @@ Currently Alice has the following features!
   - Moderation Commands 
     - Kick/Ban/Mute(Timeout)
   - Say and Edit messages. Embeds allowed via JSON.
-
+  - Small Antibot system - This definetly needs to get better but it works...
 ## Notes
 Limitations: Currently, The database only tracks a global usage. I'm considering splitting so you can run per server tracking. Things that will need to be updated would be the dataHandler, commands like leaderboard, and the services like Exp and Currency.
 There are likely other limitations I haven't considered or realized.
 
-Starting the Bot: After setting up your `config.json`, execute `node start` (developed using Node v21). This action initializes a database file in the data folder, which can be renamed in the DataHandler file.
+Starting the Bot: After setting up your `config.json`, execute `node start` (developed using Node v18). This action initializes a database file in the data folder, which can be renamed in the DataHandler file.
 
 Note: The bot is designed to provide essential functionalities without premium charges. All features are freely accessible, and kept open for open-source development.
 
 Note 2: I'm nowhere skilled enough and will be continuesly improving, The way the code looks between updates as I add things may be different as I refine the way I code and learn about new functionalities. Feel free to make a branch and update to make it more consistant.
+
+
