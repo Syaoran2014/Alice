@@ -85,18 +85,19 @@
 
         //Checks user data. I only care if exists or not.
             async checkUserData(user) {
-                if(this.cache[user] && this.cache[user].timestamp > Date.now() - 1000 * 60 * 60){
-                    return this.cache[user].data;
-                }
+                // Cacheing Bug, Ultimately I just need to FIX MY FUCKING DATAHANDLER
+                // if(this.cache[user] && this.cache[user].timestamp > Date.now() - 1000 * 60 * 60){
+                //     return this.cache[user].data;
+                // }
                 return new Promise((resolve, reject) => {
                     this.util.dataHandler.getUserInfo(user, (err, userInfo) => {
                         if (err) {
                             reject(err);
                         } else {
-                            this.cache[user] = {
-                                data: userInfo,
-                                timestamp: Date.now()
-                            };
+                            // this.cache[user] = {
+                            //     data: userInfo,
+                            //     timestamp: Date.now()
+                            // };
                             resolve(userInfo != null);
                         }
                     });
