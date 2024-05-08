@@ -1,7 +1,7 @@
 {
   "name": "cardinal",
-  "version": "1.4.0",
-  "description": "Cardinal All-in-one bot",
+  "version": "1.4.1",
+  "description": "Alice, The soon to be All-in-one bot",
   "main": "index.js",
   "scripts": {
     "start": "node .",
