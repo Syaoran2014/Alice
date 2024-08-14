@@ -1,6 +1,11 @@
 # TODO:
 
 - [] FIX YOUR FUCKING DATAHANDLER
+- [] Ticket System
+- [] Add Channel, Perms, etc (Guild updates) send to logs. 
+- [] Add a Info for generic bot info (What does Alice do.)
+- [] Fix Poll system -> Allow to check if any polls are active, Remember active polls for restarts.
+- [] Welcome messages with optional Validate button
 - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
 - [] Malort
 - [] Hunt/Fish (Daily/Timely activity)
@@ -10,6 +15,8 @@
 - [] Determine if my current Database structure supports this.....
   - [] Port over to AWS Database? 
   - [] Port to Better Database Service?
+
+- [] Other Mee6, Carl, etc bot stuff
 
 Large Scale Idea:
 - [] Adventure RPG

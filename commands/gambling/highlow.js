@@ -34,7 +34,7 @@ module.exports = {
                 return interaction.reply("You don't have that much! Try again with a lower wager.");
             }
 
-            const gameState = new highLowGameState(betAmount, userCurrency, userId);
+            const gameState = new highLowGameState(betAmount, userCurrency, userId, interaction);
             gameState.initializeComponents();
             userGames.set(interaction.user.id, gameState);
 
@@ -45,14 +45,15 @@ module.exports = {
             const collector = interaction.channel.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
 
             collector.on('collect', async i => {
+                //util.logger.log(`Interaction: ${interaction.user.id}, Collector: ${i.user.id}`);
                 const gameState = userGames.get(interaction.user.id);
+                const int = gameState.interaction;
                 const [action, gameId] = i.customId.split('-');
 
                 if (!gameState) {
                     return i.reply({ content: "No active game found.", ephemeral: true});
                 }
-
-                if (i.user.id !== gameState.gameId) return;
+                if(i.user.id !== gameState.gameId) return;
 
                 gameState.handleUserChoice(action, i, collector, util);
 
@@ -70,40 +71,42 @@ class highLowGameState {
         this.gameId = user; 
         this.currentCard = this.drawCard();
         this.winCount = 0; 
-        this.multiplier = Math.round(.70 * 100) / 100;
+        this.multiplier = Math.round(.65 * 100) / 100;
     }
 
     async handleUserChoice(choice, interaction, collector, util) {
-        
-        if (choice !== 'Cashout') {
-            const newCard = this.drawCard();
-            const result = this.compareCards(this.currentCard, newCard, choice);
 
-            if (result === 'correct') {
-                this.winCount++;
-                this.multiplier += .15;
-                this.currentCard = newCard;
-
-                const embed = this.createGameEmbed(interaction.user, newCard);
-                embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
-                return await interaction.update({ embeds: [embed], components: this.components , files: [this.currentCard.cardFile]});
-            } else if (result === 'draw') {
-                this.currentCard = newCard;
-
-                const embed = this.createGameEmbed(interaction.user, newCard);
-                embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
-
-                return await interaction.update({ embeds: [embed], components: this.components , files: [this.currentCard.cardFile]});
-            } 
-
+        if (choice == 'Cashout') {
             collector.stop();
-            util.dataHandler.payout(interaction.user.id, (this.betAmount * -1));
-            return await interaction.update({ content: `You Lost, the next card was a ${newCard.value} of ${newCard.suit}s`, components: [] });
-        } else {
-            collector.stop();
-            util.dataHandler.payout(interaction.user.id, Math.round(this.betAmount * this.multiplier));
+            util.dataHandler.payout(interaction.user.id, (Math.floor(this.betAmount * this.multiplier) - this.betAmount));
             return interaction.update({ content: `You cashed out with ${this.multiplier}x your bet. Totalling ${Math.round(this.betAmount * this.multiplier)} Alcoins`, components: []});
         }
+
+        const newCard = this.drawCard();
+        const result = this.compareCards(this.currentCard, newCard, choice);
+        const embed = this.createGameEmbed(interaction.user, newCard);
+
+        switch(result){
+            case 'correct':
+                this.winCount++;
+                this.multiplier = Math.round((this.multiplier + .30) * 100 ) /100;
+                this.currentCard = newCard;
+                embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
+                await interaction.update({ embeds: [embed], components: this.components, files: [this.currentCard.cardFile]});
+                break;
+            case 'draw':
+                this.currentCard = newCard;
+                embed.description = `Win Count: ${this.winCount}, Current Multiplier ${this.multiplier}`;
+                await interaction.update({ embeds: [embed], components: this.components , files: [this.currentCard.cardFile]});
+                break;
+            case 'incorrect':
+                collector.stop();
+                util.dataHandler.payout(interaction.user.id, (this.betAmount * -1));
+                await interaction.update({ content: `You Lost -${this.betAmount} Alcoins, the next card was a ${newCard.value} of ${newCard.suit}s`, components: [] });
+                break;
+            default: 
+                return interaction.reply("Unreachable");
+        }        
     }
 
     compareCards(oldCard, newCard, choice) {

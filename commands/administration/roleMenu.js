@@ -152,7 +152,7 @@ async function handleEditMenu(interaction, util) {
     const buttonCollector = newMessage.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
 
     reactionCollector.on('collect', async (reaction, user) => {
-        const roleEmoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
+        const roleEmoji = reaction.emoji;
         if(roleMenuConfig[roleEmoji]) {
             delete roleMenuConfig[roleEmoji];
             const description = roleMenuDescription(roleMenuConfig); 
@@ -184,9 +184,6 @@ async function handleEditMenu(interaction, util) {
             });
         }
     });
-
-    // reactionCollector.on('end', async () => {
-    // });
 
     buttonCollector.on('collect', async buttonInteraction => {
         if(buttonInteraction.user.id !== interaction.user.id) {

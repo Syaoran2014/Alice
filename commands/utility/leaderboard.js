@@ -17,7 +17,6 @@ module.exports = {
     const userChoice = interaction.options.getString('boardtype');
     const choice = userChoice ? userChoice : "exp";
     
-    util.logger.log(`${userChoice}, ${choice}`);
     switch(choice) {
       case "exp":
         util.dataHandler.getTopUsers(10, (err, topUsers) => {
@@ -32,7 +31,7 @@ module.exports = {
               title: "Top 10 Users by Experience",
               fields: topUsers.map((user, index) => ({
                   name: `${index + 1}. ${user.UserName}`,
-                  value: `Level ${user.ChatLvl} - Xp: ${user.ChatExp}/${user.LevelXp}`
+                  value: `Level ${user.ChatLvl} - Xp: ${user.ChatExp.toLocaleString()}/${user.LevelXp.toLocaleString()}`
               })),
           };
           return interaction.reply({ embeds: [embed] });  
@@ -51,7 +50,7 @@ module.exports = {
             title: "Top 10 Users by Currency",
             fields: topUsers.map((user, index) => ({
                 name: `${index + 1}. ${user.UserName}`,
-                value: `${user.Currency} Alcoins.`
+                value: `${user.Currency.toLocaleString()} Alcoins.`
             })),
         };
         return interaction.reply({ embeds: [embed] });  

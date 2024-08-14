@@ -2,3 +2,4 @@ config.json
 node_modules
 data/Cardinal.db
 data/roleMenuConfig.json
+assets/cointoss/.DS_Store

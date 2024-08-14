@@ -30,11 +30,36 @@ module.exports = {
                 const xp = parseInt(userInfo.ChatExp);
                 const nextLvlExp = userInfo.LevelXp;
                 const currency = userInfo.Currency;
+                const dailyStreak = userInfo.DailyStreak;
+                const inv = userInfo.Inventory;
 
                 const embed = {
                     color: parseInt("f0ccc0", 16),
                     title: `${pUser} user profile`,
-                    description: `Level ${currentLevel}: ${xp}/${nextLvlExp}\nCurrency: ${currency}`,
+                    //description: 'Titles:\n',
+                    fields: [
+                        {
+                            name: 'Progress:',
+                            value: `Level ${currentLevel}\nXP: ${xp.toLocaleString()}/${nextLvlExp.toLocaleString()}`,
+                        },
+                        {
+                            name: 'Currency:',
+                            value: `${currency}`,
+                        },
+                        {
+                            name: 'Daily Streak:',
+                            value: `${dailyStreak}`,
+                            inline: true,
+                        },
+                        {
+                            name: 'Inventory:', 
+                            value: `${inv}`,
+                            inline: true,
+                        },
+                    ],
+                    footer: {
+                        text: 'Maidenless'
+                    },
                 };
 
                 return interaction.reply({

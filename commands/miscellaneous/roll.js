@@ -35,5 +35,31 @@ module.exports = {
 
         return interaction.reply({ content: `You rolled ${amount}d${dice}\nTotal: ${total}\n Your rolls were: ${JSON.stringify(totalList)}` });
     },
-    callback: async function(msg, args, util) {}
+    callback: async function(msg, args, util) {
+        if (args.length != 1) return msg.channel.send("Correct Usage: .roll #d##\nexample .roll 2d20");
+        let dice = args[0].split("d");
+        let amount = 1;
+        let diceType = 1;
+        let totalList = [];
+        let total = 0; 
+        if (dice.length > 1) {
+            amount = dice[0];
+            diceType = dice[1];
+        } else {
+            diceType = dice[0];
+        }
+
+        if(amount == 1) {
+            let result = Math.floor(Math.random() * diceType) + 1;
+            return msg.channel.send(`You rolled ${amount}d${diceType}\nYou got: ${result}`);
+        } else {
+            for (let i = 0; i < amount; i++) {
+                let result = Math.floor(Math.random() * diceType) + 1;
+                total += result;
+                totalList.push(result);
+            }
+            return msg.channel.send(`You rolled ${amount}d${diceType}\nTotal: ${total}\nYour rolls: ${JSON.stringify(totalList)}`);
+        }
+
+    }
 };

@@ -356,7 +356,7 @@ class BlackjackGameState {
         // console.log(JSON.stringify(this.playerHands));
         return {
             author: {
-                name: `${user.username}'s Blackjack Gamne`,
+                name: `${user.displayName}'s Blackjack Gamne`,
                 icon_url: user.avatarURL(),
             },
             description: `Dealer's Hand: \n${this.formatHand(this.dealerHand, true)}`,

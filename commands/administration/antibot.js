@@ -10,7 +10,8 @@ module.exports = {
             .setDescription('Enable or Disable')
             .addChoices(
                 { name: 'Enable', value: 'enable' },
-                { name: 'Disable', value: 'disable' }
+                { name: 'Disable', value: 'disable' },
+                { name: 'Status', value: 'status' }
             )
             .setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
@@ -37,6 +38,8 @@ module.exports = {
                         [0, interaction.guildId]);
                     util.BotClass.clearGuildCache(interaction.guildId); 
                     return interaction.reply(`Antibot has been disabled for ${interaction.guild}`);
+                case "status":
+                    return interaction.reply(`Current Antibot status for ${interaction.guild} is ${guildInfo.Antibot}`);
                 default:
                     return interaction.reply("You did something unsupported of this command");
             }

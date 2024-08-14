@@ -1,3 +1,5 @@
+const { PermissionFlagsBits } = require("discord.js");
+
 class AntibotService {
     constructor(util) {
         this.util = util;
@@ -7,6 +9,10 @@ class AntibotService {
     async antibot(message){
 
         if(message.content.includes('discord.gg/') && message.content.includes('@everyone')) {
+            if (message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+                return;
+            }
+
             if(!message.deletable) return;
             await message.channel.send(`That message has triggered antibot actions. If you believe this is an error please contact <@129421280536428545>`);
             await message.delete();

@@ -75,12 +75,14 @@ module.exports = {
         pollMap.set(message.id, { collector, voteCounts, userVotes });
 
         collector.on('collect', (reaction, user) => {
+            util.logger.log("Reaction collected");
             const votes = userVotes.get(user.id) || new Set();
             if(anonymous) {
                 reaction.users.remove(user.id);
                 if(votes && votes.has(reaction.emoji.name)) {
                     voteCounts.set(reaction.emoji.name, (voteCounts.get(reaction.emoji.name) || 0) - 1);
                     votes.delete(reaction.emoji.name);
+                    util.logger.log(`Vote should have been removed`);
                     return;
 
                 }
@@ -104,6 +106,7 @@ module.exports = {
         
         collector.on('remove', (reaction, user) => {
             if(!anonymous) {
+                util.logger.log("Remove collected");
                 const votes = userVotes.get(user.id);
                 if(votes && votes.has(reaction.emoji.name)) {
                     votes.delete(reaction.emoji.name);
@@ -115,6 +118,7 @@ module.exports = {
             }
         });
         collector.on('end', () => {
+            util.logger.log("Collector Ended");
             const results = Array.from(voteCounts.entries()).map(([emoji, count]) => {
                 const percentage = voteCounts.size > 0 ? (count / Array.from(voteCounts.values()).reduce((acc, cur) => acc + cur) * 100).toFixed(2) : 0;
                 return `${emoji}: ${count} votes (${percentage}%)`;

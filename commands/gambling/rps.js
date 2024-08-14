@@ -72,7 +72,7 @@ module.exports = {
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'scissors') {
                             winAmount += betAmount;
-                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            gameEmbed.title = `${choice} beats ${result}, You WIN ${winAmount} Alcoins!`
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;
@@ -83,7 +83,7 @@ module.exports = {
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'rock') {
                             winAmount += betAmount;
-                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            gameEmbed.title = `${choice} beats ${result}, You WIN ${winAmount} Alcoins!`
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;
@@ -94,7 +94,7 @@ module.exports = {
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         } else if (result === 'paper') {
                             winAmount += betAmount;
-                            gameEmbed.title = `${result} beats ${choice}, You WIN ${winAmount} Alcoins!`
+                            gameEmbed.title = `${choice} beats ${result}, You WIN ${winAmount} Alcoins!`
                             interaction.reply({ embeds: [gameEmbed], files: [resultFile]});
                         }
                         break;

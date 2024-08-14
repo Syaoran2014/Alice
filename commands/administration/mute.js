@@ -13,7 +13,7 @@ module.exports = {
           .setName('duration')
           .setDescription('Length in Minutes to timeout a user')
           .setRequired(true))
-      .setDefaultMemberPermissions(PermissionFlagsBits.TimeoutMembers),
+      .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
     execute: async function(interaction, util) {
         const user = interaction.options.getMember('target');
         const durationAmount = interaction.options.getNumber('duration');
