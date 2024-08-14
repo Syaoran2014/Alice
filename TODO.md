@@ -3,8 +3,11 @@
 - [] FIX YOUR FUCKING DATAHANDLER
 - [] Ticket System
 - [] Add Channel, Perms, etc (Guild updates) send to logs. 
-- [] Add a Info for generic bot info (What does Alice do.)
-- [] Fix Poll system -> Allow to check if any polls are active, Remember active polls for restarts.
+- [✓] Add a Info for generic bot info (What does Alice do.)
+- [✓] Add server status - Show whats enabled / disabled
+- [✓] Update: Fix role menu edit to only remove emotes that were removed.
+- [] BUGFIX: Fix Poll system -> Allow to check if any polls are active, Remember active polls for restarts.
+- [] Add suggestions
 - [] Welcome messages with optional Validate button
 - [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
 - [] Malort

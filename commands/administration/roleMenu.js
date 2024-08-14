@@ -199,7 +199,17 @@ async function handleEditMenu(interaction, util) {
             embed.setDescription(description); 
             await message.edit({ embeds: [embed] }); 
 
-            await message.reactions.removeAll();
+            //Remember what was removed and only remove that reaction.....
+            //await message.reactions.removeAll();
+            
+            const currentReactions = message.reactions.cache;
+            for (let [emoji] of currentReactions) {
+                const guildEmoji = util.bot.emojis.cache.get(emoji);
+                if (!roleMenuConfig[guildEmoji]) {
+                    await currentReactions.get(emoji).remove();
+                }
+            }
+
             Object.keys(roleMenuConfig).forEach(async (emoji) => {
                 await message.react(emoji);
             });
