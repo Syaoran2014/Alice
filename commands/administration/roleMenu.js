@@ -14,13 +14,14 @@ module.exports = {
       .addSubcommand(subcommand => subcommand
           .setName('edit')
           .setDescription('Edits an existing role menu')
-          .addStringOption(option => option.setName('messageid').setDescription('MessageId of the Role menu you want to edit').setRequired(true))),
+          .addStringOption(option => option.setName('messageid').setDescription('MessageId of the Role menu you want to edit').setRequired(true))
+          .addStringOption(option => option.setName('title').setDescription('The title you want to change the role menu to'))),
     execute: async function(interaction, util) {
         const subcommand = interaction.options.getSubcommand();
 
         switch(subcommand) {
             case 'setup':
-                await handleSetupMenu(interaction, util);
+                await handleSetupNew(interaction, util);
                 break;
             case 'edit':
                 await handleEditMenu(interaction, util);
@@ -33,77 +34,99 @@ module.exports = {
     callback: async function(msg, args, util) {}
 };
 
-async function handleSetupMenu(interaction, util) {
+async function handleSetupNew(interaction, util) {
     const titleOption = interaction.options.getString('title');
-    const title = titleOption ? `${titleOption}` : `Default`;
-    const embed = new EmbedBuilder().setTitle('Role Menu Setup!').setColor(parseInt("f0ccc0", 16));
+    const title = titleOption ? `${titleOption}` : 'Default';
+    const serverId = interaction.guild.id; 
+    const channelId = interaction.channelId;
 
-    const message = await interaction.reply({ content: `Send a message with an Emoji and @Role\nExample: :white_check_mark: <@&429342178859548682>\nReply 'done' to finish setup`, embeds: [embed], fetchReply: true });
-    const filter = (resp) => resp.author.id === interaction.user.id;
+    const embed = new EmbedBuilder()
+      .setTitle('Role Menu Setup!')
+      .setColor(parseInt("f0ccc0", 16));
 
-    const collector = interaction.channel.createMessageCollector({ filter, time: 600000 }); 
+    const save = new ButtonBuilder().setCustomId('save').setLabel('Save').setStyle(ButtonStyle.Success);
+    const cancel = new ButtonBuilder().setCustomId('cancel').setLabel('Cancel').setStyle(ButtonStyle.Danger);
+
+    const row = new ActionRowBuilder().addComponents(save, cancel);
 
     let roleMenuConfig = {};
+    
+    const menuMessage = await interaction.reply({ content: `***React to this message to add a Role***`, embeds: [embed], components: [row], fetchReply: true });
+    const filter = (reaction, user) => !user.bot || user.id === interaction.user.id;
 
-    collector.on('collect', async (resp) => {
-        if(resp.content.toLowerCase() === 'done') {
-            embed.setTitle(title);
-            message.edit({ content: "", embeds: [embed] });
-            collector.stop();
+    const reactionCollector = menuMessage.createReactionCollector({filter, time: 600000 });
+    const buttonCollector = menuMessage.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
+
+    reactionCollector.on('collect', async (reaction, user) => {
+        const roleEmoji = reaction.emoji;
+        await reaction.message.reply({ content: `Which role should be linked with ${reaction.emoji}?\nReply with the roleID or @mention the role.\n**Note:** If you do not see the emoji in this message, I'm not able to use it.`, fetchReply: true}).then(roleReply => {
+            const roleCollector = roleReply.channel.createMessageCollector({ filter: message => message.author.id == user.id, time: 60000, max: 1 });
+
+            roleCollector.on('collect', async (message) => {
+                const roleId = message.content.match(/\d+/);
+                if(roleId) {
+                    roleMenuConfig[roleEmoji] = roleId;
+                    const description = roleMenuDescription(roleMenuConfig);
+                    embed.setDescription(description);
+                    await menuMessage.edit({ embeds: [embed] });
+                    await roleReply.reply({ content: `Linked ${reaction.emoji} with <@&${roleId}>`, ephemeral: true });
+                } else {
+                    await roleReply.reply({ content: `Invalid role id. no changes were made.`, ephemeral: true });
+                }
+            });
+
+            roleCollector.on('end', async collected => {
+                if (collected.size === 0) {
+                    await roleReply.reply({ content: `No role id provided. No changes were made.`, ephemeral: true });
+                }
+            });
+        });    
+    });
+
+    buttonCollector.on('collect', async buttonInteraction => {
+        if(buttonInteraction.user.id !== interaction.user.id) {
+            await buttonInteraction.reply({ content: 'You cannot modify this role menu.', ephemeral: true });
             return;
         }
 
-        const parts = resp.content.split(' ');
-        if (parts.length === 2){
-            const emoji = parts[0];
-            const roleId = parts[1].match(/\d+/);
+        if(buttonInteraction.customId === 'save') {
+            const configPath = path.join(__dirname, '../../data/roleMenuConfig.json');
+            let existingConfig = {};
 
-            if (!roleId) {
-                resp.reply("Invalid role id");
+            if(fs.existsSync(configPath)) {
+                const fileContent = fs.readFileSync(configPath, 'utf8');
+                existingConfig = fileContent ? JSON.parse(fileContent) : {}; 
             }
 
-            roleMenuConfig[emoji] = roleId;
+            const serverId = interaction.guild.id;
+            const channelId = interaction.channelId;
 
-            let output = '';
+            if(!existingConfig[serverId]){
+                existingConfig[serverId] = {};
+            }
+            if(!existingConfig[serverId][channelId]) {
+                existingConfig[serverId][channelId] = {};
+            }
+            existingConfig[serverId][channelId][menuMessage.id] = roleMenuConfig;
 
-            Object.keys(roleMenuConfig).forEach(key => {
-                const roles = roleMenuConfig[key].map(roleId => `<@&${roleId}>`).join(', ');
-                output += `${key}: ${roles}\n`;
+            fs.writeFileSync(configPath, JSON.stringify(existingConfig, null, 2));
+            reactionCollector.stop();
+            buttonCollector.stop();
+            embed.setTitle(title);
+            await menuMessage.edit({ content: "", embeds: [embed], components: [] }); 
+
+            Object.keys(roleMenuConfig).forEach(async (emoji) => {
+                await menuMessage.react(emoji);
             });
 
-            embed.setDescription(output);
-            await message.edit({ embeds: [embed] });
-
-            await message.react(emoji);
-        } else {
-            await resp.reply("Invalid format. Please use \"emoji role\".");
+            await interaction.followUp({ content: 'Role menu setup complete.\nYou can now delete your messages!', ephemeral: true });
+        }
+        if(buttonInteraction.cusomId === 'cancel'){
+            reactionCollector.stop();
+            buttonCollector.stop();
         }
     });
-
-    collector.on('end', async () => {
-        const configPath = path.join(__dirname, '../../data/roleMenuConfig.json');
-        let existingConfig = {};
-
-        if(fs.existsSync(configPath)) {
-            const fileContent = fs.readFileSync(configPath, 'utf8');
-            existingConfig = fileContent ? JSON.parse(fileContent) : {}; 
-        }
-
-        const serverId = interaction.guild.id;
-        const channelId = interaction.channelId;
-
-        if(!existingConfig[serverId]){
-            existingConfig[serverId] = {};
-        }
-        if(!existingConfig[serverId][channelId]) {
-            existingConfig[serverId][channelId] = {};
-        }
-        existingConfig[serverId][channelId][message.id] = roleMenuConfig;
-
-        fs.writeFileSync(configPath, JSON.stringify(existingConfig, null, 2));
-        await interaction.followUp({ content: 'Role menu setup complete.\nYou can now delete your messages!', ephemeral: true });
-    });
-}
+};
 
 async function handleEditMenu(interaction, util) {
     const messageId = interaction.options.getString('messageid');
@@ -111,6 +134,8 @@ async function handleEditMenu(interaction, util) {
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     const serverId = interaction.guild.id;
     const channelId = interaction.channelId;
+
+    const titleOption = interaction.options.getString('title');
 
     // Check if the message exists in the config
     if (!config[serverId][channelId][messageId]) {
@@ -138,8 +163,10 @@ async function handleEditMenu(interaction, util) {
         .setTitle(originalEmbedData.title)
         .setDescription(originalEmbedData.description)
         .setColor(originalEmbedData.color);    
-    
-    const newMessage = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+
+    if(titleOption) embed.setTitle(titleOption);
+
+    const newMessage = await interaction.reply({ content: `To add a role to the menu: React to this message.\nTo Remove a role from the menu, react on the existing emote`, embeds: [embed], components: [row], fetchReply: true });
     
     // React to the new message with all registered emojis
     let roleMenuConfig = config[serverId][channelId][messageId];
@@ -199,9 +226,6 @@ async function handleEditMenu(interaction, util) {
             embed.setDescription(description); 
             await message.edit({ embeds: [embed] }); 
 
-            //Remember what was removed and only remove that reaction.....
-            //await message.reactions.removeAll();
-            
             const currentReactions = message.reactions.cache;
             for (let [emoji] of currentReactions) {
                 const guildEmoji = util.bot.emojis.cache.get(emoji);
@@ -220,14 +244,12 @@ async function handleEditMenu(interaction, util) {
             reactionCollector.stop();
             buttonCollector.stop();
         }
-
     });
 
     buttonCollector.on('end', () => {
         newMessage.delete();
         interaction.channel.send({ content: `You may now delete any undeleted messages`, ephemeral: true });
     });
-
 }
 
 function roleMenuDescription(roleConfig) {
