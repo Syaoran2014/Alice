@@ -27,7 +27,7 @@ Currently Alice has the following features!
     - Leaderboards (Global) - will add local server support later
   - Gambling Games 
     - Betroll, blackjack, coinToss, highlow, rps
-  - Music! 
+  - Music! (Bug https://github.com/Syaoran2014/Alice/issues/16) 
     - Able to play music in one channel per server! Allows music from places like Spotify, Youtube, Apple Music, etc (Default Spotify)
   - Server Autorole on Join
   - Role Menu Support  
