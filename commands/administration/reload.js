@@ -11,6 +11,7 @@ module.exports = {
         .setRequired(true))
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     execute: async function (interaction, util) {
+        if(interaction.user.id != '129421280536428545') return interaction.reply('Bot Owner command Only');
         const commandName = interaction.options.getString('command', true);
         const command = interaction.client.commands.get(commandName);
         if (!command) {

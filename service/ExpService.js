@@ -44,7 +44,7 @@ class ExpService {
       if (levelUp) {
         this.util.dataHandler.getDatabase().run(
           "UPDATE DiscordUserData SET ChatExp = ChatExp + ?, ChatLvl = ChatLvl + 1, LevelXp = ? WHERE UserId = ?",
-          [newXp, Math.floor(getLevelTotalXp(currentLevel + 2)), userId], 
+          [newXp, Math.floor(getLevelTotalXp(currentLevel + 1)), userId], 
           (err) => {
             if (err) {
               this.util.logger.error(err.message);
@@ -52,6 +52,17 @@ class ExpService {
             } 
             //this.util.logger.log(`${user.username} leveled to ${currentLevel + 1}, and gained ${newXp} Xp.`);
           });
+      } else if (userInfo.LevelXp != nextLvlExp) {
+          this.util.dataHandler.getDatabase().run(
+              "UPDATE DiscordUserData SET LevelXp = ? WHERE UserId = ?",
+              [nextLvlExp, userId],
+              (err) => {
+                  if(err) {
+                      this.util.logger.error(err.message);
+                      return;
+                  }
+              });
+          this.util.logger.warn(`User ${userInfo.UserName}: ${userId} Level Xp was fixed`);
       } else {
         this.util.dataHandler.getDatabase().run(
           "UPDATE DiscordUserData SET ChatExp = ChatExp + ? WHERE UserId = ?",
@@ -86,6 +97,6 @@ function getLevelTotalXp(cLevel) {
   const growthFactor = 1.15;
   const nextLevel = cLevel;
   return (
-    (baseXp * (Math.pow(growthFactor, nextLevel) - 1)) / (growthFactor - 1)
+    Math.floor((baseXp * (Math.pow(growthFactor, nextLevel) - 1)) / (growthFactor - 1))
   );
 }

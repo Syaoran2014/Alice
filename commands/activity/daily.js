@@ -12,12 +12,12 @@ module.exports = {
         const userId = interaction.user.id;
         const baseDailyAmount = 1000; 
         const now = new Date();
+        const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() +1, 0, 0, 0);
+        const timeToMidnight = midnight.getTime() - now.getTime();
+        const hours = Math.floor(timeToMidnight / (1000 * 60 * 60));
+        const minutes = Math.floor((timeToMidnight % (1000 * 60 * 60)) / (1000 * 60));
 
         if (dailyCooldown.has(userId)) {
-            const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() +1, 0, 0, 0);
-            const timeToMidnight = midnight.getTime() - now.getTime();
-            const hours = Math.floor(timeToMidnight / (1000 * 60 * 60));
-            const minutes = Math.floor((timeToMidnight % (1000 * 60 * 60)) / (1000 * 60));
             //const seconds = Math.floor((timeToMidnight % (100 * 60)) / 1000); 
             return interaction.reply(`You already claimed today's daily, Try again in ${hours} hours ${minutes} minutes.`);
         }
@@ -34,20 +34,27 @@ module.exports = {
 
             now.setHours(0, 0, 0, 0);
             lastClaimDate.setHours(0, 0, 0, 0);
+            if (now.getTime() == lastClaimDate.getTime()) {
+                dailyCooldown.set(userId, Date.now());
+                return interaction.reply(`You already claimed today's daily, Try again in ${hours} hours ${minutes} minutes.`);
+            }
             const timeDiff = now - lastClaimDate;
             const diffDays = timeDiff / (1000 * 3600 * 24);
+
 
             if (diffDays === 0 || diffDays === 1) {
                 if (userInfo.DailyStreak === null) {
                     userInfo.DailyStreak = 0; 
                 }
-                userInfo.DailyStreak += 1;
+                if (diffDays === 1) {
+                    userInfo.DailyStreak += 1;
+                }
             } else {
                 userInfo.DailyStreak = 1;
             }
 
             const multiplier = 1 + (0.1 * userInfo.DailyStreak);
-            const dailyAmount = baseDailyAmount * multiplier;
+            const dailyAmount = Math.floor(baseDailyAmount * multiplier);
 
             util.dataHandler.getDatabase().run(
                 "UPDATE DiscordUserData SET Currency = Currency + ?, DailyStreak = ?, LastDailyClaim = ? WHERE UserId = ?",

@@ -24,7 +24,10 @@ module.exports = {
             return interaction.reply(`You can't send lower than 0`);
         }
         
-        
+        if (userId === paidUser.id) {
+            return interaction.reply(`You can't pay yourself`);
+        }
+
         util.dataHandler.getUserInfo(userId, (err, userInfo) => {
             if (err){
                 util.logger.error(err.message);

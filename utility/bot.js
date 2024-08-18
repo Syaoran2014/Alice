@@ -18,7 +18,16 @@
             // We use 'c' for the event parameter to keep it seperate from the already defined 'client'
             this.client.once(util.lib.Events.ClientReady, (c) => {
                 this.util.logger.log(`Ready! Logged in as ${c.user.tag}`);
-                c.user.setActivity(`with your heart! ❤`, { type: ActivityType.Playing });
+                let totalMembers = 0;
+                for (const [guildId, guild ] of c.guilds.cache) {
+                    try {
+                        const members = guild.memberCount;
+                        totalMembers += members
+                    } catch (error) {
+                        this.util.logger.error(`Error fetching members in guild ${guild.name}`);
+                    }
+                }
+                c.user.setActivity(`with ${totalMembers} hearts! ❤`, { type: ActivityType.Playing });
 
                 var config = this.loadConfig(path.join(__dirname, '../data/roleMenuConfig.json'));
 
@@ -67,7 +76,7 @@
                     }
 
                     if (message.content.startsWith(this.util.config.prefix)) {
-                        this.util.commandHandler.handleCommand(message);
+                        await this.util.commandHandler.handleCommand(message);
                     }
                 });
 
@@ -79,7 +88,7 @@
                 } else {
                     this.util.dataHandler.initializeUserInfo(interaction.user, interaction.guildId);
                 }
-                this.util.commandHandler.handleInteraction(interaction);
+                await this.util.commandHandler.handleInteraction(interaction);
             });
         }
 
@@ -128,11 +137,12 @@
                 const config = this.loadConfig(configFile);
 
                 if(!config) return;
-
+                
                 const guildId = reaction.message.guildId;
                 const channelId = reaction.message.channelId; 
                 const messageId = reaction.message.id;
-                const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
+                const emoji = reaction.emoji;
+                //const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
 
                 const guild = client.guilds.cache.get(guildId);
                 if (!guild) return;
@@ -166,7 +176,8 @@
                 const guildId = reaction.message.guildId;
                 const channelId = reaction.message.channelId; 
                 const messageId = reaction.message.id;
-                const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
+                //const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
+                const emoji = reaction.emoji;
 
                 const guild = client.guilds.cache.get(guildId);
                 if (!guild) return;
