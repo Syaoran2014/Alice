@@ -11,8 +11,17 @@ class MediaService {
 
         //await player.extractors.loadDefault((ext));
         this.player.events.on('playerStart', ( queue, track ) => {
-            queue.metadata.channel.send(`Started playing **${track.title}**!`);
+            return;
+            //queue.metadata.channel.send(`Started playing **${track.title}**!`);
         }); 
+
+        this.player.events.on('playerError', ( queue, error, track ) => {
+            queue.metadata.channel.send(`Error playing this audio track,\n${error}`);  
+        });
+
+        this.player.events.on('error', (queue, error) => {
+            queue.metadata.channel.send(`Error in the queue,\n${error}`);
+        });
     }
 
     async initialize(){
