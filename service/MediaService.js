@@ -1,12 +1,11 @@
 const { Player } = require('discord-player');
 const { YoutubeiExtractor } = require('discord-player-youtubei');
 const { SpotifyExtractor } = require('@discord-player/extractor'); 
-const mediaConfig = require('../data/mediaConfig');
 
 class MediaService {
     constructor(util) {
         this.util = util;
-        this.player = new Player(util.bot, mediaConfig.discordPlayer);
+        this.player = new Player(util.bot);
         //const player = new Player(util.bot)
 
         //await player.extractors.loadDefault((ext));
