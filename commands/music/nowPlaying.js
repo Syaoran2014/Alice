@@ -61,37 +61,50 @@ module.exports = {
             }
         };
 
+        const mediaService = util.services.get('MediaService');
+        const mediaEmbed = mediaService.nowPlayingEmbed(util, queue);
+
         const components = [
             new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('previous').setEmoji("\u23EE").setStyle(ButtonStyle.Secondary),
+                //new ButtonBuilder().setCustomId('previous').setEmoji("\u23EE").setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId('playpause').setEmoji("\u23EF").setStyle(ButtonStyle.Primary),
                 new ButtonBuilder().setCustomId('skip').setEmoji("\u23ED").setStyle(ButtonStyle.Secondary),
             ),
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('shuffle').setEmoji("\u{1F500}").setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId('stop').setEmoji("\u23F9").setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId('test').setEmoji("\u23CF").setStyle(ButtonStyle.Secondary)
+                //new ButtonBuilder().setCustomId('test').setEmoji("\u23CF").setStyle(ButtonStyle.Secondary)
             )
         ];
 
-        if(!isAdmin || !isDj) {
+        if(!isAdmin && !isDj) {
             return interaction.reply({ embeds: [embed] });
         }
 
-        const mConsole = await interaction.reply({ embeds: [embed], components, fetchReply: true });
+        const mConsole = await interaction.reply({ embeds: [mediaEmbed], components, fetchReply: true });
 
         const buttonCollector = mConsole.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
 
-        buttonCollector.on('collect', async buttonInteraction => {
-            if(buttonInteraction.user.id !== interaction.user.id) {
-                return buttonInteraction.reply({ content: 'You cannot use these buttons', ephemeral: true});
+        buttonCollector.on('collect', async bInt => {
+            if(bInt.user.id !== interaction.user.id) {
+                return bInt.reply({ content: 'You cannot use these buttons', ephemeral: true});
             }
             // #TODO: Allow any admin or DJ to use and console as long as they are in voicechat...
 
             // #TODO: Test current setup
             // I think interaction reply will error out, might need to be "buttonInteraction.reply()"
-            switch(buttonInteraction.customId) {
+            switch(bInt.customId) {
                 case "playpause":
+                    const newEmbed = mediaService.nowPlayingEmbed(util, queue);
+
+                    if (queue.node.isPlaying()){
+                        queue.node.pause();
+                        newEmbed.author.name = 'Paused:';
+                    } else if (queue.node.isPaused()) {
+                        queue.node.resume();
+                    }
+                    return bInt.update({ embeds: [newEmbed] });
+
                     break;
                 case "previous":
                     break;
@@ -101,14 +114,17 @@ module.exports = {
                         title: success ? `Current track ${queue.currentTrack.title} has been skipped` : `Something went wrong, please try again`,
                         color: parseInt("f0ccc0", 16),
                     };
-                    return interaction.reply({ embeds: [skippedEmbed] });
+                    await queue.metadata.channel.send({ embeds: [skippedEmbed] });
+                    return bInt.update({ embeds: [mediaService.nowPlayingEmbed(util, queue)] });
+                    break;
                 case "shuffle":
                     await queue.tracks.shuffle();
                     const shuffleEmbed = {
                         title: `Queue has shuffled ${queue.tracks.size} song(s)`,
                         color: parseInt("f0ccc0", 16),
                     };
-                    return interaction.reply({ embeds: [shuffleEmbed]});
+                    queue.metadata.channel.send({ embeds: [shuffleEmbed]});
+                    return bInt.update({content: " "});
                     break;
                 case "stop":
                     queue.delete();
@@ -116,12 +132,11 @@ module.exports = {
                         title: "Music stopped, see you next time! \n(*^ ‿ <*)♡",
                         color: parseInt("f0ccc0", 16),
                     };
-                    return interaction.reply({ embeds: [stopEmbed]});
+                    return bInt.update({ embeds: [stopEmbed], components: []});
+                    break;
                 case "test":
                     break;
             }
         });
-        
-
     }
 };

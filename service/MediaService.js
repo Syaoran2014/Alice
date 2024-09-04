@@ -40,6 +40,38 @@ class MediaService {
         // });
     }
 
+    nowPlayingEmbed(util, queue){
+        const track = queue.currentTrack;
+        const embed = {
+            color: parseInt("eeb1b1", 16),
+            thumbnail: {
+                url: track.thumbnail
+            },
+            author: {
+                name: `Now Playing:`,
+                icon_url: util.bot.user.displayAvatarURL({size: 1024, dynamic: true}),
+            },
+            description: `**Title: ${track.title}\n**Artist:** ${track.author}`,
+            fields: [
+                {
+                    name: 'Requested by:',
+                    value: `${track.requestedBy}`,
+                    inline: true,
+                },
+                {
+                    name: 'Duration:',
+                    value: `${track.duration}`,
+                    inline: true,
+                },
+            ],
+            image: {
+                url: `https://media1.tenor.com/images/b3b66ace65470cba241193b62366dfee/tenor.gif`
+            }
+        };
+
+        return embed;
+    }
+
 
 }
 
