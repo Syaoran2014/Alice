@@ -9,12 +9,16 @@ Eventaully I want to do more advance things, like patching into Amazon for stora
 ## Setup
 
 Requirements: Create a `config.json` file in the same directory as `index.js`.
+For Music to work - follow the instructions here: https://github.com/retrouser955/discord-player-youtubei under the "Signing into Youtube" Section.
+tl;dr run this command:
+`$ npx --no discord-player-youtubei`
 
 ```json
 {
   "token": "Bot_token_here",
   "clientId": "Your bot's ClientId",
-  "prefix": "*"
+  "prefix": "*",
+  "YoutubeOauthToken": "Paste entire npx command output here"
 }
 ```
 
@@ -28,7 +32,8 @@ Currently Alice has the following features!
   - Gambling Games 
     - Betroll, blackjack, coinToss, highlow, rps
   - Music! (Bug https://github.com/Syaoran2014/Alice/issues/16) 
-    - Able to play music in one channel per server! Allows music from places like Spotify, Youtube, Apple Music, etc (Default Spotify)
+    - *Requires Youtube Oauth*
+    - Able to play music in one channel per server!
   - Server Autorole on Join
   - Role Menu Support  
     - Now editable!

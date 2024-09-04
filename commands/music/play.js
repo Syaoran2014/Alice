@@ -14,19 +14,21 @@ module.exports = {
           .setName('song')
           .setDescription("Adds song to queue.")
           .setRequired(true)
-        )
-      .addStringOption(option => 
-        option
-          .setName("platform")
-          .setDescription("Platform to search your music on. Default Youtube")
-          .setRequired(false)
-          .addChoices(
-            { name: 'Spotify', value: "SPOTIFY_SEARCH"},
-            { name: 'Youtube', value: "YOUTUBE"},
-            { name: 'Apple Music', value: 'APPLE_MUSIC_SEARCH'},
-            { name: 'SoundCloud', value: 'SOUNDCLOUD'}
-          )
         ),
+    //TODO: Right now, due to changes with youtube, choosing search is not working right now.
+    // TBH this might be fine to leave and keep with searchEngine.Auto ....
+      //.addStringOption(option => 
+      //  option
+      //    .setName("platform")
+      //    .setDescription("Platform to search your music on. Default Spotify")
+      //    .setRequired(false)
+      //    .addChoices(
+      //      { name: 'Spotify', value: "SPOTIFY_SEARCH"},
+      //      { name: 'Youtube', value: "YOUTUBE"},
+      //      { name: 'Apple Music', value: 'APPLE_MUSIC_SEARCH'},
+      //      { name: 'SoundCloud', value: 'SOUNDCLOUD'}
+      //    )
+      //  ),
     execute: async function(interaction, util) {
         const player = useMainPlayer();
         const channel = interaction.member.voice.channel;
@@ -75,7 +77,7 @@ module.exports = {
             }
             
             const queue = await player.nodes.create(interaction.guild, {
-                metadata: interaction.channel,
+                metadata: interaction,
                 leaveOnEmpty: true,
                 leaveOnEmptyCooldown: 60000,
                 leaveOnEnd: true,
@@ -108,7 +110,6 @@ module.exports = {
             const query = song; 
             const res = await player.search(query, {
                 requestedBy: interaction.member,
-                searchEngine: platform ? QueryType.platform : QueryType.SPOTIFY_SEARCH
             });
 
             if(!res || !res.tracks.length) {
@@ -117,7 +118,7 @@ module.exports = {
             }
 
             const queue = await player.nodes.create(interaction.guild, {
-                metadata: interaction.channel,
+                metadata: interaction,
                 leaveOnEmpty: true,
                 leaveOnEmptyCooldown: 30000,
                 leaveOnEnd: true,
