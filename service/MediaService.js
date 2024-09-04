@@ -21,13 +21,15 @@ class MediaService {
         this.player.events.on('error', (queue, error) => {
             queue.metadata.channel.send(`Error in the queue,\n${error}`);
         });
+
+        //t his.player.events.on('debug', (queue, message) => { this.util.logger.debug(`${queue.guild.id} ${message}`)});
     }
 
     async initialize(){
         try {
             //await this.player.extractors.loadDefault((ext) => ext !== null);
             await this.player.extractors.register(YoutubeiExtractor, { authentication: this.util.config.youtubeOauthToken });
-            //await this.player.extractors.register(SpotifyExtractor, {});
+            await this.player.extractors.register(SpotifyExtractor, {});
         } catch (error) {
             this.util.logger.log('Failed to initialize MediaService:', error);
         }

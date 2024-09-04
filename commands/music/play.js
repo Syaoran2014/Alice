@@ -16,6 +16,7 @@ module.exports = {
           .setRequired(true)
         ),
     //TODO: Right now, due to changes with youtube, choosing search is not working right now.
+    // TBH this might be fine to leave and keep with searchEngine.Auto ....
       //.addStringOption(option => 
       //  option
       //    .setName("platform")
