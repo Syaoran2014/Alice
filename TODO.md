@@ -9,7 +9,9 @@
 - [] BUGFIX: Fix Poll system -> Allow to check if any polls are active, Remember active polls for restarts.
 - [] Add suggestions
 - [] Welcome messages with optional Validate button
-- [] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
+- [✓] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
+    - [] Make Previous Button, Volume control??
+    - [] Update now playing embed on music swap, Take out timer on buttons.
 - [] Malort
 - [] Hunt/Fish (Daily/Timely activity)
 - [] Slots (Gambling)

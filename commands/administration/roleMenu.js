@@ -230,6 +230,9 @@ async function handleEditMenu(interaction, util) {
             for (let [emoji] of currentReactions) {
                 const guildEmoji = util.bot.emojis.cache.get(emoji);
                 if (!roleMenuConfig[guildEmoji]) {
+                    if (roleMenuConfig[emoji]) {
+                        continue;
+                    }
                     await currentReactions.get(emoji).remove();
                 }
             }

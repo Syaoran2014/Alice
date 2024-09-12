@@ -2,7 +2,7 @@
 
 ## About
 
-Alice is a JavaScript-based Discord bot developed for personal experimentation and coding practice. Its primary purpose is to amalgamate my favorite features from various bots into a single, versatile platform, with unique twists to make it unique.
+Alice is a JavaScript-based Discord bot developed for personal experimentation and coding practice. Its primary purpose is to amalgamate my favorite features from various bots into a single, versatile platform, with twists to make it unique.
 
 Eventaully I want to do more advance things, like patching into Amazon for storage and making a website for management. Also to add some sort of activity/game that can provide fun and promote server activity. Also AI chatting based on the way your server talks.
 
@@ -31,9 +31,10 @@ Currently Alice has the following features!
     - Leaderboards (Global) - will add local server support later
   - Gambling Games 
     - Betroll, blackjack, coinToss, highlow, rps
-  - Music! (Bug https://github.com/Syaoran2014/Alice/issues/16) 
+  - Music! 
     - *Requires Youtube Oauth*
     - Able to play music in one channel per server!
+    - Accepts Spotify and Youtube links and Playlists
   - Server Autorole on Join
   - Role Menu Support  
     - Now editable!
