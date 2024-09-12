@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require("discord.js");
 const { useQueue } = require("discord-player");
 
 module.exports = {
@@ -8,15 +8,30 @@ module.exports = {
       .setDescription("Shows currently playing song"),
     execute: async function(interaction, util) {
         const queue = useQueue(interaction.guild);
+        let djRole = null;
         
         if(!queue) {
             return interaction.reply({ content: "No music is currently in queue.", ephemeral: true });
         }
 
-        const track = queue.currentTrack;
-        //const progress = queue.node.createProgressBar();
+        util.dataHandler.getGuildConfig(interaction.guildId, (err, guildInfo) => {
+            if (err) {
+                util.logger.error(err.message);
+                return interaction.reply({ content: "Error in getting Server Configuration.\nIf issue persists, contact bot admin", ephemeral: true });
+            }
+            if (!guildInfo) {
+                util.logger.error(`No Guild info found for ${interaction.guild}`);
+                return interaction.reply({ content: "No server info was found, Contact bot admin" });
+            } else {
+                djRole = guildInfo.DjRole;
+            }
+        });
+        
+        const isAdmin = interaction.member.permissions.toArray().includes("Administrator");
+        const isDj = interaction.member.roles.cache.has(djRole);
 
-        //util.logger.log(JSON.stringify(track, null, 4));
+        const track = queue.currentTrack;
+        
         //Update to be a console.
         const embed = {
             color: parseInt("f0ccc0", 16),
@@ -28,7 +43,7 @@ module.exports = {
                 name: `Now Playing:`,
                 icon_url: util.bot.user.displayAvatarURL({ size: 1024, dynamic: true}),
             },
-            description: `**Title:** ${track.title}\n **Artist:** ${track.author}`,
+            description: `**Title:** ${track.title}\n**Artist:** ${track.author}`,
             fields: [
                 {
                     name: 'Requested by:',
@@ -46,6 +61,82 @@ module.exports = {
             }
         };
 
-        interaction.reply({ embeds: [embed]});
+        const mediaService = util.services.get('MediaService');
+        const mediaEmbed = mediaService.nowPlayingEmbed(util, queue);
+
+        const components = [
+            new ActionRowBuilder().addComponents(
+                //new ButtonBuilder().setCustomId('previous').setEmoji("\u23EE").setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('playpause').setEmoji("\u23EF").setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId('skip').setEmoji("\u23ED").setStyle(ButtonStyle.Secondary),
+            ),
+            new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('shuffle').setEmoji("\u{1F500}").setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('stop').setEmoji("\u23F9").setStyle(ButtonStyle.Danger),
+                //new ButtonBuilder().setCustomId('test').setEmoji("\u23CF").setStyle(ButtonStyle.Secondary)
+            )
+        ];
+
+        if(!isAdmin && !isDj) {
+            return interaction.reply({ embeds: [embed] });
+        }
+
+        const mConsole = await interaction.reply({ embeds: [mediaEmbed], components, fetchReply: true });
+
+        const buttonCollector = mConsole.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
+
+        buttonCollector.on('collect', async bInt => {
+            if(bInt.user.id !== interaction.user.id) {
+                return bInt.reply({ content: 'You cannot use these buttons', ephemeral: true});
+            }
+            // #TODO: Allow any admin or DJ to use and console as long as they are in voicechat...
+
+            // #TODO: Test current setup
+            // I think interaction reply will error out, might need to be "buttonInteraction.reply()"
+            switch(bInt.customId) {
+                case "playpause":
+                    const newEmbed = mediaService.nowPlayingEmbed(util, queue);
+
+                    if (queue.node.isPlaying()){
+                        queue.node.pause();
+                        newEmbed.author.name = 'Paused:';
+                    } else if (queue.node.isPaused()) {
+                        queue.node.resume();
+                    }
+                    return bInt.update({ embeds: [newEmbed] });
+
+                    break;
+                case "previous":
+                    break;
+                case "skip":
+                    const success = queue.node.skip();
+                    const skippedEmbed = {
+                        title: success ? `Current track ${queue.currentTrack.title} has been skipped` : `Something went wrong, please try again`,
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    await queue.metadata.channel.send({ embeds: [skippedEmbed] });
+                    return bInt.update({ embeds: [mediaService.nowPlayingEmbed(util, queue)] });
+                    break;
+                case "shuffle":
+                    await queue.tracks.shuffle();
+                    const shuffleEmbed = {
+                        title: `Queue has shuffled ${queue.tracks.size} song(s)`,
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    queue.metadata.channel.send({ embeds: [shuffleEmbed]});
+                    return bInt.update({content: " "});
+                    break;
+                case "stop":
+                    queue.delete();
+                    const stopEmbed = {
+                        title: "Music stopped, see you next time! \n(*^ ‿ <*)♡",
+                        color: parseInt("f0ccc0", 16),
+                    };
+                    return bInt.update({ embeds: [stopEmbed], components: []});
+                    break;
+                case "test":
+                    break;
+            }
+        });
     }
 };
