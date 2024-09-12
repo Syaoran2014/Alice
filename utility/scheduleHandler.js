@@ -26,7 +26,6 @@ class scheduleHandler {
 
     performDailyReset() {
         dailyCooldown.clear();
-        console.log("Daily Map cleared.");
     }
 
     scheduleHourlyTask() {
@@ -42,7 +41,6 @@ class scheduleHandler {
 
     performHourlyReset() {
         hourlyCooldown.clear();
-        console.log('Work Map cleared.');
     }
 
 }

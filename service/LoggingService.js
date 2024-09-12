@@ -193,8 +193,6 @@ class LoggingService {
             loggingChannel.send({ embeds: [embed] });
         });
 
-        //Add AuditLogCreate/Update events
-        
         this.util.bot.on(this.util.lib.Events.GuildEmojiCreate, async (guildEmoji) => {
             const guildInfo = await this.getGuildConfig(guildEmoji.guild.id);
             if(!guildInfo.LogEnabled) return; 
@@ -238,6 +236,120 @@ class LoggingService {
                 color: parseInt("f0ccc0", 16),
                 title: `Server Emoji's updated`,
                 description: `Emoji updated: ${newEmoji} ${oldEmoji.name} -> ${newEmoji.name}`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
+
+        this.util.bot.on(this.util.lib.Events.ChannelCreate, async (channel) => {
+            if (channel.type == 1) return;
+            const guildInfo = await this.getGuildConfig(channel.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+
+            let type;
+
+            switch (channel.type) {
+                case 0:
+                    type = 'Text Channel'
+                    break;
+                case 2:
+                    type = 'Voice Channel'
+                    break;
+                case 5:
+                    type = 'Announcement Channel'
+                    break;
+                case 15:
+                    type = 'Forum Channel'
+                    break;
+                default:
+                    type = 'Channel or Category'
+            }
+
+            const embed = {
+                color: parseInt("7feb7f", 16),
+                title: 'New Channel Created',
+                description: `${type} ${channel.name} was created => ${channel}`,
+            };
+
+            loggingChannel.send({ embeds: [embed] });
+        });
+
+        this.util.bot.on(this.util.lib.Events.ChannelUpdate, async (oldChannel, newChannel) => {
+            if (oldChannel.type == 1) return;
+            const guildInfo = await this.getGuildConfig(newChannel.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+            
+            const embed = {
+                color: parseInt("f0ccc0", 16),
+                title: 'Channel Updated',
+                fields: [],
+            };
+
+            if (oldChannel.name !== newChannel.name) {
+                embed.description = `Name Changed:\nOld Name: ${oldChannel.name}\nNew Name: ${newChannel.name}`;
+            }
+
+            switch (oldChannel.type) {
+                case 0:
+                    if (oldChannel.topic !== newChannel.topic) {
+                        embed.fields.push({ name: "Topic Updated", value: `Old: ${oldChannel.topic}\nNew: ${newChannel.topic}`});
+                    }
+                    //type = 'Text Channel'
+                    break;
+                case 2:
+                    //type = 'Voice Channel'
+                    break;
+                case 5:
+                    //type = 'Announcement Channel'
+                    break;
+                case 15:
+                    if (oldChannel.topic !== newChannel.topic) {
+                        embed.fields.push({ name: "Topic Updated", value: `Old: ${oldChannel.topic}\nNew: ${newChannel.topic}`});
+                    }
+                    //type = 'Forum Channel'
+                    break;
+                default:
+                    //type = 'Channel or Category'
+            }
+
+            loggingChannel.send({ embeds: [embed] }); 
+                           
+
+        });
+
+        this.util.bot.on(this.util.lib.Events.ChannelDelete, async (channel) => {
+            if (channel.type == 1) return;
+            const guildInfo = await this.getGuildConfig(channel.guild.id);
+            if(!guildInfo.LogEnabled) return; 
+            const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+            if(!loggingChannel) return;
+            let type;
+
+            switch (channel.type) {
+                case 0:
+                    type = 'Text Channel'
+                    break;
+                case 2:
+                    type = 'Voice Channel'
+                    break;
+                case 5:
+                    type = 'Announcement Channel'
+                    break;
+                case 15:
+                    type = 'Forum Channel'
+                    break;
+                default:
+                    type = 'Channel or Category'
+            }
+
+            const embed = {
+                color: parseInt("ff3232", 16),
+                title: 'Channel Deleted',
+                description: `${type} ${channel.name} was deleted`,
             };
 
             loggingChannel.send({ embeds: [embed] });

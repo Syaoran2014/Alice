@@ -2,19 +2,23 @@
 
 ## About
 
-Alice is a JavaScript-based Discord bot developed for personal experimentation and coding practice. Its primary purpose is to amalgamate my favorite features from various bots into a single, versatile platform, with unique twists to make it unique.
+Alice is a JavaScript-based Discord bot developed for personal experimentation and coding practice. Its primary purpose is to amalgamate my favorite features from various bots into a single, versatile platform, with twists to make it unique.
 
 Eventaully I want to do more advance things, like patching into Amazon for storage and making a website for management. Also to add some sort of activity/game that can provide fun and promote server activity. Also AI chatting based on the way your server talks.
 
 ## Setup
 
 Requirements: Create a `config.json` file in the same directory as `index.js`.
+For Music to work - follow the instructions here: https://github.com/retrouser955/discord-player-youtubei under the "Signing into Youtube" Section.
+tl;dr run this command:
+`$ npx --no discord-player-youtubei`
 
 ```json
 {
   "token": "Bot_token_here",
   "clientId": "Your bot's ClientId",
-  "prefix": "*"
+  "prefix": "*",
+  "YoutubeOauthToken": "Paste entire npx command output here"
 }
 ```
 
@@ -28,7 +32,9 @@ Currently Alice has the following features!
   - Gambling Games 
     - Betroll, blackjack, coinToss, highlow, rps
   - Music! 
-    - Able to play music in one channel per server! Allows music from places like Spotify, Youtube, Apple Music, etc (Default Spotify)
+    - *Requires Youtube Oauth*
+    - Able to play music in one channel per server!
+    - Accepts Spotify and Youtube links and Playlists
   - Server Autorole on Join
   - Role Menu Support  
     - Now editable!
