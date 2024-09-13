@@ -28,6 +28,7 @@ util.config = config;
 util.lib = Discord;
 util.bot = new Discord.Client({
   intents: [
+    Discord.GatewayIntentBits.DirectMessages,
     Discord.GatewayIntentBits.Guilds,
     Discord.GatewayIntentBits.GuildEmojisAndStickers,
     Discord.GatewayIntentBits.GuildMembers,
@@ -38,6 +39,9 @@ util.bot = new Discord.Client({
     Discord.GatewayIntentBits.MessageContent,
     Discord.GatewayIntentBits.GuildVoiceStates
   ],
+  partials: [ 
+      Discord.Partials.Channel
+  ],
 });
 util.commandHandler = new CommandHandler(util);
 util.services = new ServiceHandler(util);
@@ -45,13 +49,13 @@ util.dataHandler = new DataHandler(util);
 util.schedule = new ScheduleHandler(util);
 util.BotClass = new CardinalBot(util);
 
-// const handleTermination = () => {
-//   util.logger.log('\nBot is shutting down...');
-//   util.commandHandler.deleteAllCommands();
-//   util.bot.destroy();
-//   // process.exit();
-// };
-// process.on('SIGINT', handleTermination);
+//const handleTermination = async () => {
+//  util.logger.log('\nBot is shutting down...');
+//  util.commandHandler.deleteAllCommands();
+//  util.bot.destroy();
+//  // process.exit();
+//};
+//process.on('SIGINT', handleTermination);
 
 
 // This doesn't work in d.js V14 OR I've implemented it wrong

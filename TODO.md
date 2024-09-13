@@ -7,7 +7,7 @@
 - [✓] Add server status - Show whats enabled / disabled
 - [✓] Update: Fix role menu edit to only remove emotes that were removed.
 - [] BUGFIX: Fix Poll system -> Allow to check if any polls are active, Remember active polls for restarts.
-- [] Add suggestions
+- [✓] Add suggestions
 - [] Welcome messages with optional Validate button
 - [✓] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
     - [] Make Previous Button, Volume control??

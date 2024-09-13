@@ -19,10 +19,10 @@
             this.client.once(util.lib.Events.ClientReady, (c) => {
                 this.util.logger.log(`Ready! Logged in as ${c.user.tag}`);
                 let totalMembers = 0;
-                for (const [guildId, guild ] of c.guilds.cache) {
+                for (const [guildId, guild] of c.guilds.cache) {
                     try {
                         const members = guild.memberCount;
-                        totalMembers += members
+                        totalMembers += members;
                     } catch (error) {
                         this.util.logger.error(`Error fetching members in guild ${guild.name}`);
                     }
@@ -60,6 +60,34 @@
                 this.client.on(this.util.lib.Events.MessageCreate, async (message) => {
                     if (message.author.bot) {
                         return; 
+                    }
+                    if (message.channel.type == this.util.lib.ChannelType.DM) {
+                        this.util.logger.debug(JSON.stringify(message)); 
+                        const owner = await this.client.users.fetch(this.util.config.ownerId);
+                        const suggestion = {
+                            color: 0xeeb1b1,
+                            author: {
+                                name: `${message.author.username} - ID: ${message.author.id}`,
+                                icon_url: message.author.displayAvatarURL({size: 1024, dynamic: true}),
+                                },
+                            title: `New message received`, 
+                            description: message.content,
+                            fields: [],
+                            footer: {
+                                text: `${message.createdAt}`
+                            },
+                        };
+
+                        if (message.attachments.size > 0) {
+                            let i = 1;
+                            message.attachments.forEach(attachment => {
+                                suggestion.fields.push({ name: `Attachment ${i}`, value: attachment.url });
+                                i++;
+                            });
+                        }
+                        this.util.logger.debug(JSON.stringify(suggestion)); 
+
+                        return await owner.send({ embeds: [suggestion] });
                     }
 
                     const guildConfig = await this.getGuildConfig(message.guild.id);
