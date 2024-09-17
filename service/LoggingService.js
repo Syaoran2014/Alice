@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 class LoggingService {
     constructor(util) {
@@ -293,6 +293,63 @@ class LoggingService {
                 embed.description = `Name Changed:\nOld Name: ${oldChannel.name}\nNew Name: ${newChannel.name}`;
             }
 
+            const newPerms = newChannel.permissionOverwrites.cache;
+            const oldPerms = oldChannel.permissionOverwrites.cache;
+
+            const oldOverwritesMap = new Map(oldPerms.map(o => [o.id, o]));
+            const newOverwritesMap = new Map(newPerms.map(o => [o.id, o]));
+
+            const allIds = new Set([...oldOverwritesMap.keys(), ...newOverwritesMap.keys()]);
+
+            for(const id of allIds) {
+                const oldPerm = oldOverwritesMap.get(id);
+                const newPerm = newOverwritesMap.get(id);
+
+                util.logger.debug(`${JSON.stringify(oldPerm)} --- ${JSON.stringify(newPerm)}`);
+
+                if(!oldPerm) {
+                    const targ = getOverwriteTarget(newPerm, newChannel.guild); 
+                    const allowed = newPerm.allow.toArray().join(', ') || 'None';
+                    const denied = newPerm.deny.toArray().join(', ') || 'None';
+                    let value = `Permission Added for ${targ}\n`;
+                    value += `Allowed Permissions: ${allowed}\nDenied Permissions: ${denied}\n`;
+                    embed.fields.push({ name: 'Permission Added', value: value });
+                } else if (!newPerm) {
+                    const targ = getOverwriteTarget(oldPerm, oldChannel.guild);
+                    embed.fields.push ({ name: 'Permission Removed', value: `Permission removed for ${targ}` });
+                } else {
+                    const oldAllow = oldPerm.allow;
+                    const newAllow = newPerm.allow;
+                    const oldDeny = oldPerm.deny;
+                    const newDeny = newPerm.deny;
+
+                    const addedAllow = new PermissionsBitField(newAllow.bitfield & ~oldAllow.bitfield);
+                    const removedAllow = new PermissionsBitField(oldAllow.bitfield & ~newAllow.bitfield);
+                    const addedDeny = new PermissionsBitField(newDeny.bitfield & ~oldDeny.bitfield);
+                    const removedDeny = new PermissionsBitField(oldDeny.bitfield & ~newDeny.bitfield);
+
+                    const changes = [];
+
+                    if (addedAllow.bitfield !== 0n) {
+                        changes.push(`Permissions **allowed**: ${addedAllow.toArray().join(', ')}`);
+                    }
+                    if (removedAllow.bitfield !== 0n) {
+                        changes.push(`Permissions **no longer allowed**: ${removedAllow.toArray().join(', ')}`);
+                    }
+                    if (addedDeny.bitfield !== 0n) {
+                        changes.push(`Permissions **denied**: ${addedDeny.toArray().join(', ')}`);
+                    }
+                    if (removedDeny.bitfield !== 0n) {
+                        changes.push(`Permissions **no longer denied**: ${removedDeny.toArray().join(', ')}`);
+                    }
+
+                    if (changes.length > 0) {
+                        const target = getOverwriteTarget(newPerm, newChannel.guild);
+                        embed.fields.push({ name: `Permission Updated for ${target}`, value: changes.join('\n') });
+                    }
+                }
+            }
+
             switch (oldChannel.type) {
                 case 0:
                     if (oldChannel.topic !== newChannel.topic) {
@@ -446,5 +503,18 @@ class LoggingService {
         }
     }
 }
+
+function getOverwriteTarget(overwrite, guild) {
+    if (overwrite.type === 0) {
+        const role = guild.roles.cache.get(overwrite.id);
+        return role ? `Role: ${role.name}` : `Role ID: ${overwrite.id}`;
+    } else if (overwrite.type === 1) {
+        const member = guild.members.cache.get(overwrite.id);
+        return member ? `Member: ${member.user.username}` : `Member ID: ${overwrite.id}`;
+    } else {
+        return `ID: ${overwrite.id}`;
+    }
+}
+
 
 module.exports = LoggingService;
