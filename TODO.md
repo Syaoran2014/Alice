@@ -2,7 +2,7 @@
 
 - [] FIX YOUR FUCKING DATAHANDLER
 - [] Ticket System
-- [] Add Channel, Perms, etc (Guild updates) send to logs. 
+- [✓] Add Channel, Perms, etc (Guild updates) send to logs. 
 - [✓] Add a Info for generic bot info (What does Alice do.)
 - [✓] Add server status - Show whats enabled / disabled
 - [✓] Update: Fix role menu edit to only remove emotes that were removed.
@@ -20,6 +20,11 @@
 - [] Determine if my current Database structure supports this.....
   - [] Port over to AWS Database? 
   - [] Port to Better Database Service?
+- [✓] Port To WebServer
+  - [✓] make upload handling
+  - [✓] store attachments
+  - [] store profile pictures
+  - [] Blog
 
 - [] Other Mee6, Carl, etc bot stuff
 
@@ -54,9 +59,6 @@ Large Scale Idea:
     - [] Boosts crafted Items?
   - [] ?
 
-- [] Port To WebServer
-  - [] Make Functional GUI for everything above
-  - [] Blog
 - [] Port To Mobile Apps
   - [] Apple
   - [] Andorid

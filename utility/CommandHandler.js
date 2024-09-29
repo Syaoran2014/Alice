@@ -114,7 +114,7 @@ class CommandHandler {
   }
 
   // Handles chat commands, and calls callback in the command file.
-  handleCommand(message) {
+  async handleCommand(message) {
     if (message.author.bot || message.author.id == this.util.bot.user.id) {
       return;
     }

@@ -4,6 +4,8 @@ const CardinalLogger = require("./utility/CardinalLogger.js");
 const DataHandler = require("./utility/DataHandler.js");
 const ServiceHandler = require("./utility/ServiceHandler.js");
 const ScheduleHandler = require("./utility/scheduleHandler.js");
+const axios = require('axios');
+const FormData = require('form-data');
 const fs = require("node:fs");
 const path = require("node:path");
 const Discord = require("discord.js");
@@ -25,6 +27,8 @@ util.logger.log(`Initializing bot...`);
 util.path = path;
 util.fs = fs;
 util.config = config;
+util.axios = axios;
+util.FormData = FormData; 
 util.lib = Discord;
 util.bot = new Discord.Client({
   intents: [

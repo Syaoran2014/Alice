@@ -22,7 +22,16 @@ class LoggingService {
                 },
                 title: `Message Deleted in ${message.channel}`,
                 description: `***Content:*** ${message.content}`,
+                fields: [],
             };
+
+            if(message.attachments.size > 0) {
+                let i = 0;
+                for(const attachment of message.attachments.values()){
+                    embed.fields.push({ name: `Attachment ${i + 1}`, value: `https://alice.stardawn.gg/attachments/${message.channel.id}/${message.id}/${attachment.name}`});
+                    i++;
+                }
+            }
 
             loggingChannel.send({ embeds: [embed] });
         });
@@ -305,8 +314,6 @@ class LoggingService {
                 const oldPerm = oldOverwritesMap.get(id);
                 const newPerm = newOverwritesMap.get(id);
 
-                util.logger.debug(`${JSON.stringify(oldPerm)} --- ${JSON.stringify(newPerm)}`);
-
                 if(!oldPerm) {
                     const targ = getOverwriteTarget(newPerm, newChannel.guild); 
                     const allowed = newPerm.allow.toArray().join(', ') || 'None';
@@ -372,6 +379,8 @@ class LoggingService {
                 default:
                     //type = 'Channel or Category'
             }
+            
+            if(embed.description == null && embed.fields.length < 1) return; 
 
             loggingChannel.send({ embeds: [embed] }); 
                            
