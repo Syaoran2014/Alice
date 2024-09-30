@@ -16,11 +16,13 @@ class CardinalBot {
 
         // When the client is ready, run this code (only once)
         // We use 'c' for the event parameter to keep it seperate from the already defined 'client'
-        this.client.once(util.lib.Events.ClientReady, (c) => {
+        this.client.once(util.lib.Events.ClientReady, async (c) => {
             this.util.logger.log(`Ready! Logged in as ${c.user.tag}`);
             let totalMembers = 0;
-            for (const [guildId, guild] of c.guilds.cache) {
+            for (const guild of c.guilds.cache.values()) {
                 try {
+                    await guild.members.fetch();
+                    
                     const members = guild.memberCount;
                     totalMembers += members;
                 } catch (error) {
@@ -288,7 +290,7 @@ async function uploadAttachments(message, util) {
 
                 await util.axios.post('https://alice.stardawn.gg/upload', formData, {
                     headers: {
-                        'Authorization': `Bearer ${util.config.token1}`,
+                        'Authorization': `Bearer ${util.config.httpToken}`,
                         ...formData.getHeaders(),
                     },
                     maxContentLength: Infinity,

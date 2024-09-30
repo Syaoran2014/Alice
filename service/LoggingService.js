@@ -202,6 +202,79 @@ class LoggingService {
             loggingChannel.send({ embeds: [embed] });
         });
 
+        this.util.bot.on(this.util.lib.Events.UserUpdate, async (oldUser, newUser) => {
+            let embed = {
+                color: 0xeeb1b1,
+                author: {
+                    name: newUser.username,
+                    icon_url: newUser.displayAvatarURL(),
+                },
+                title: `User ${newUser.username}: ${newUser.id} updated`,
+                fields: [],
+                timestamp: new Date(),
+            };
+
+            if (oldUser.displayName !== newUser.displayName) {
+                embed.fields.push({ name: 'Old Display Name', value: `${oldUser.displayName}`, inline: true});
+                embed.fields.push({ name: 'New Display Name', value: `${newUser.displayName}`, inline: true});
+            }
+
+            if (oldUser.username !== newUser.username) {
+                embed.fields.push({ name: 'Old Username', value: `${oldUser.username}`, inline: true});
+                embed.fields.push({ name: 'New Username', value: `${newUser.username}`, inline: true});
+            }
+
+            if (oldUser.avatar !== newUser.avatar) {
+                let oldAvatarURL;
+                if (oldUser.avatar) {
+                    oldAvatarURL = `https://alice.stardawn.gg/avatars/${oldUser.id}/${oldUser.avatar}.png`;
+                } else {
+                    oldAvatarURL = oldUser.defaultAvatarURL;
+                }
+                const newAvatarURL = `https://alice.stardawn.gg/avatars/${newUser.id}/${newUser.avatar}.png`;
+                try {
+                    const uploadPath = `/avatars/${newUser.id}/${newUser.avatar}.png`;
+                    const avatarURL = newUser.displayAvatarURL({ format: 'png', size: 1024 });
+                    
+                    const response = await this.util.axios.get(avatarURL, { responseType: 'arraybuffer' });
+                    const avatarData = response.data;
+                    const formData = new this.util.FormData();
+                    formData.append('file', avatarData, {filename: `${newUser.avatar}.png` });
+                    formData.append('path', uploadPath);
+
+                    await this.util.axios.post('https://alice.stardawn.gg/upload', formData, {
+                        headers: {
+                            'Authorization': `Bearer ${this.util.config.httpToken}`,
+                            ...formData.getHeaders(),
+                        },
+                        maxContentLength: Infinity,
+                        maxBodyLength: Infinity,
+                    });
+                    this.util.logger.log(`Uploaded new avatar for user ${newUser.username}: ${newUser.id}`);
+                } catch (err) {
+                    this.util.logger.error(`Failed to fetch avatar for user ${newUser.id}: ${err}`);
+                    return;
+                }
+
+                embed.fields.push({name: 'Old Avatar', value: `[View Avatar](${oldAvatarURL})`, inline: true });
+                embed.fields.push({name: 'New Avatar', value: `[View Avatar](${newAvatarURL})`, inline: true });
+            }
+
+            if (embed.fields.length < 1) return;
+            
+            for (const guild of this.util.bot.guilds.cache.values()) {
+                if (!guild.members.cache.has(newUser.id)) continue;
+
+                const guildInfo = await this.getGuildConfig(guild.id);
+                if(!guildInfo.LogEnabled) continue;
+
+                const loggingChannel = this.util.bot.channels.cache.get(guildInfo.LogChannel);
+                if(!loggingChannel) continue;
+
+                loggingChannel.send({ embeds: [embed] });
+            }
+        });
+
         this.util.bot.on(this.util.lib.Events.GuildEmojiCreate, async (guildEmoji) => {
             const guildInfo = await this.getGuildConfig(guildEmoji.guild.id);
             if(!guildInfo.LogEnabled) return; 
