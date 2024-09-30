@@ -11,6 +11,7 @@
 - [] Welcome messages with optional Validate button
 - [✓] Update nowPlaying to be more console like (Buttons with Pause/Play, Next, volume?)
     - [] Make Previous Button, Volume control??
+        - [] Need to keep track of history for Previous button. 
     - [] Update now playing embed on music swap, Take out timer on buttons.
 - [] Malort
 - [] Hunt/Fish (Daily/Timely activity)
@@ -23,7 +24,7 @@
 - [✓] Port To WebServer
   - [✓] make upload handling
   - [✓] store attachments
-  - [] store profile pictures
+  - [✓] store profile pictures
   - [] Blog
 
 - [] Other Mee6, Carl, etc bot stuff
