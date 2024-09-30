@@ -22,8 +22,11 @@ module.exports = {
         } catch (error) {
             if (content.trim().startsWith('{') && content.trim().endsWith('}')) {
                 await interaction.reply({ content: `The provided JSON was not valid: ${error.message}`, ephemeral: true });
-            } else {
+            } else if (interaction.user.id === '129421280536428545') {
                 await interaction.channel.send({ content: content });
+                return interaction.reply({ content: `Message Sent!`, ephemeral: true });
+            } else {
+                await interaction.channel.send({ content: `\\*${content}` });
                 return interaction.reply({ content: `Message Sent!`, ephemeral: true });
             }
         }
