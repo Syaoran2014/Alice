@@ -209,19 +209,19 @@ class LoggingService {
                     name: newUser.username,
                     icon_url: newUser.displayAvatarURL(),
                 },
-                title: `User ${newUser.username}: ${newUser.id} updated`,
+                thumbnail: { url: newUser.displayAvatarURL() }, 
+                title: `User ${newUser.username} profile updated`,
                 fields: [],
-                timestamp: new Date(),
+                footer: { text: `UID: ${newUser.id}`},
+                timestamp: new Date()
             };
 
             if (oldUser.displayName !== newUser.displayName) {
-                embed.fields.push({ name: 'Old Display Name', value: `${oldUser.displayName}`, inline: true});
-                embed.fields.push({ name: 'New Display Name', value: `${newUser.displayName}`, inline: true});
+                embed.fields.push({ name: 'Updated Display Name', value: `${oldUser.displayName} -> ${newUser.displayName}`});
             }
 
             if (oldUser.username !== newUser.username) {
-                embed.fields.push({ name: 'Old Username', value: `${oldUser.username}`, inline: true});
-                embed.fields.push({ name: 'New Username', value: `${newUser.username}`, inline: true});
+                embed.fields.push({ name: 'Updated Username', value: `${oldUser.username} -> ${newUser.username}`});
             }
 
             if (oldUser.avatar !== newUser.avatar) {
@@ -256,8 +256,7 @@ class LoggingService {
                     return;
                 }
 
-                embed.fields.push({name: 'Old Avatar', value: `[View Avatar](${oldAvatarURL})`, inline: true });
-                embed.fields.push({name: 'New Avatar', value: `[View Avatar](${newAvatarURL})`, inline: true });
+                embed.fields.push({name: 'Updated Avatar', value: `[Before](${oldAvatarURL}) -> [After](${newAvatarURL})`});
             }
 
             if (embed.fields.length < 1) return;
